@@ -10,11 +10,11 @@ import pandas as pd
 import numpy as np
 
 #%% Opening and reading our files
-confirmed = pd.read_csv(r"C:\Users\leale\OneDrive\Documents\cours\INSA_Lyon\4BIM\Monmouth_College\COMP-240\Project2\Covid19Data\covid_confirmed_usafacts.csv")
+confirmed = pd.read_csv('https://raw.githubusercontent.com/bbernas/Covid19Data/master/covid_confirmed_usafacts.csv')
 print(confirmed.head())
-county_pop = pd.read_csv(r"C:\Users\leale\OneDrive\Documents\cours\INSA_Lyon\4BIM\Monmouth_College\COMP-240\Project2\Covid19Data\covid_county_population_usafacts.csv")
+county_pop = pd.read_csv('https://raw.githubusercontent.com/bbernas/Covid19Data/master/covid_county_population_usafacts.csv')
 print(county_pop.head())
-deaths = pd.read_csv(r"C:\Users\leale\OneDrive\Documents\cours\INSA_Lyon\4BIM\Monmouth_College\COMP-240\Project2\Covid19Data\covid_deaths_usafacts.csv")
+deaths = pd.read_csv('https://raw.githubusercontent.com/bbernas/Covid19Data/master/covid_deaths_usafacts.csv')
 print(deaths.head())
 
 #%% Reorganize the DataFrame
