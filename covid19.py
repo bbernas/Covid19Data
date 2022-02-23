@@ -26,6 +26,26 @@ print(index)
 stacked_confirmed = index.stack()
 print(stacked_confirmed)
 
-#%%
-total_cases = stacked_confirmed.to_frame()
-print(total_cases)
+#%% Rename Series before converting into a DataFrame
+new_confirmed = stacked_confirmed.rename('total_cases')
+
+#%% convert Series into DataFrame
+final_confirmed = new_confirmed.to_frame()
+print(final_confirmed)
+
+#%% Rename column Date
+final_confirmed.rename(columns={4:'Date'},inplace=True) #doesn't work
+print(final_confirmed)
+
+columns_names = final_confirmed.columns
+print(columns_names) #only 'total_cases' (not Date)
+print(final_confirmed.index) #the columns with the dates is an index for the moment?
+
+#%% Reset index
+final_confirmed.reset_index()
+print(final_confirmed)
+
+#%% Convert date values into datetime data
+pd.to_datetime(final_confirmed,format='YYYY-mm-dd') #I don't understand how to use this function
+
+#%% Selecting specific data
