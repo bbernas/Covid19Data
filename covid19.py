@@ -20,11 +20,12 @@ confirmed_copy=confirmed.copy()
 
 #%% Set the index
 index = confirmed.set_index(["countyFIPS","County Name","State","StateFIPS"])
-print(index)
+print(index) #OK
 
 #%% Stack
 stacked_confirmed = index.stack()
 print(stacked_confirmed)
+#problem: dates is not a column but an index
 
 #%% Rename Series before converting into a DataFrame
 new_confirmed = stacked_confirmed.rename('total_cases')
@@ -32,20 +33,29 @@ new_confirmed = stacked_confirmed.rename('total_cases')
 #%% convert Series into DataFrame
 final_confirmed = new_confirmed.to_frame()
 print(final_confirmed)
-
-#%% Rename column Date
-final_confirmed.rename(columns={4:'Date'},inplace=True) #doesn't work
-print(final_confirmed)
-
-columns_names = final_confirmed.columns
-print(columns_names) #only 'total_cases' (not Date)
-print(final_confirmed.index) #the columns with the dates is an index for the moment?
+print(final_confirmed.index)
 
 #%% Reset index
-final_confirmed.reset_index()
+final_confirmed.reset_index(inplace=True)
+print(final_confirmed.index)
+print(final_confirmed)
+
+
+#%% Rename column Date
+final_confirmed.rename(columns={'level_4':'Date'},inplace=True) #doesn't work
 print(final_confirmed)
 
 #%% Convert date values into datetime data
-pd.to_datetime(final_confirmed,format='YYYY-mm-dd') #I don't understand how to use this function
+final_confirmed['Date'] = pd.to_datetime(final_confirmed['Date'])
+print(final_confirmed['Date'])
+#I don't understand how to use this function but it seems that
+#all the dates are already converted into datetime data
 
-#%% Selecting specific data
+
+#%% Check what are the index and the columns
+print(final_confirmed.index)
+columns_names = final_confirmed.columns
+print(columns_names)
+
+#%%
+
