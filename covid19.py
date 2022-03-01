@@ -169,3 +169,12 @@ print(small_cases_groupedbydate.sum())
 #%% Plot the evolution of cases as a function of time in the wole US
 fig_casesUS = px.area(small_cases_groupedbydate.sum(), x="StateFIPS", y='total_cases',title=("evolution of Covid cases in the US from "+str(month_from)+"/"+str(day_from)+"/"+str(year_from)+" to "+str(month_to)+"/"+str(day_to)+"/"+str(year_to)))
 fig_casesUS.show()
+
+#%% Goup by states
+small_cases_groupedbystate = small_cases.groupby("State")
+print(small_cases_groupedbystate.sum())
+
+#%% Plot the evolution of cases depending on the state
+fig_casesUS = px.area(small_cases_groupedbystate.sum(), x="StateFIPS", y='total_cases',title=("evolution of Covid cases in the US from "+str(month_from)+"/"+str(day_from)+"/"+str(year_from)+" to "+str(month_to)+"/"+str(day_to)+"/"+str(year_to)))
+fig_casesUS.show()
+
