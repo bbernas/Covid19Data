@@ -2,7 +2,7 @@
 Created on Fri Feb 18 21:55:31 2022
 @author: leale & bbernas
 """
-#%% importing pandas and numpy
+#%% importing pandas, nump, plotly and datetime
 import pandas as pd
 import plotly.express as px
 import numpy as np
@@ -42,14 +42,12 @@ print(final_confirmed)
 
 
 #%% Rename column Date
-final_confirmed.rename(columns={'level_4':'Date'},inplace=True) #doesn't work
+final_confirmed.rename(columns={'level_4':'Date'},inplace=True)
 print(final_confirmed)
 
 #%% Convert date values into datetime data
 final_confirmed['Date'] = pd.to_datetime(final_confirmed['Date'])
 print(final_confirmed['Date'])
-#I don't understand how to use this function but it seems that
-#all the dates are already converted into datetime data
 
 
 #%% Check what are the index and the columns
@@ -92,7 +90,7 @@ fig_cases.show()
 ### TOTAL DEATHS ###
 #%% Set the index
 index_deaths = deaths.set_index(["countyFIPS","County Name","State","StateFIPS"])
-print(index) #OK
+print(index)
 
 #%% Stack
 stacked_deaths = index_deaths.stack()
@@ -142,7 +140,7 @@ else:
 
 
 #%% Plot data
-fig_deaths = px.area(small_ChosenCounty_deaths, x="Date", y='total_cases',title=("evolution of Covid deaths in "+chosen_county+" from "+str(month_from)+"/"+str(day_from)+"/"+str(year_from)+" to "+str(month_to)+"/"+str(day_to)+"/"+str(year_to)))
+fig_deaths = px.area(small_ChosenCounty_deaths, x="Date", y='total_deaths',title=("evolution of Covid deaths in "+chosen_county+" from "+str(month_from)+"/"+str(day_from)+"/"+str(year_from)+" to "+str(month_to)+"/"+str(day_to)+"/"+str(year_to)))
 fig_deaths.show()
 
 #%% GROUP BY
@@ -169,7 +167,5 @@ small_cases_groupedbydate = small_cases.groupby("Date")
 print(small_cases_groupedbydate.sum())
 
 #%% Plot the evolution of cases as a function of time in the wole US
-pd.
-
 fig_casesUS = px.area(small_cases_groupedbydate.sum(), x="StateFIPS", y='total_cases',title=("evolution of Covid cases in the US from "+str(month_from)+"/"+str(day_from)+"/"+str(year_from)+" to "+str(month_to)+"/"+str(day_to)+"/"+str(year_to)))
 fig_casesUS.show()
