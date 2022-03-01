@@ -1,13 +1,11 @@
-# -*- coding: utf-8 -*-
 """
 Created on Fri Feb 18 21:55:31 2022
-
 @author: leale & bbernas
 """
-#%% importing pandas, nump, plotly and datetime
+#%% importing pandas and numpy
 import pandas as pd
-import numpy as np
 import plotly.express as px
+import numpy as np
 from datetime import datetime
 
 #%% Opening and reading our files
