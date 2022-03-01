@@ -1,13 +1,10 @@
-# -*- coding: utf-8 -*-
 """
 Created on Fri Feb 18 21:55:31 2022
-
 @author: leale & bbernas
 """
-#%% importing pandas, nump, plotly and datetime
+#%% importing pandas and numpy
 import pandas as pd
 import numpy as np
-import plotly.express as px
 from datetime import datetime
 
 #%% Opening and reading our files
@@ -61,35 +58,6 @@ print(columns_names)
 #%% Choose a county to explore
 chosen_county = 'Bibb County '
 chosen_state = "AL"
-
-#%% Select the chosen county
-ChosenCounty = final_confirmed.loc[(final_confirmed["County Name"] == chosen_county) & (final_confirmed['State']==chosen_state)]
-
-#%% Choose a period to look at
-##FROM
-day_from = 15 #included
-month_from = 4
-year_from = 2020
-
-##TO
-day_to = 7 #included
-month_to = 5
-year_to = 2021
-
-#%% Select the data for the period of interest
-if (year_from == year_to) :
-    if (month_from == month_to):
-        small_ChosenCounty = ChosenCounty[(ChosenCounty['Date'].dt.year==year_from) & (ChosenCounty['Date'].dt.month==month_from) & (ChosenCounty['Date'].dt.day>=day_from) & (ChosenCounty['Date'].dt.day<=day_to) ]
-    else:
-        small_ChosenCounty = ChosenCounty[((ChosenCounty['Date'].dt.year==year_from) & (((ChosenCounty['Date'].dt.month==month_from) & (ChosenCounty['Date'].dt.day>=day_from)) | ((ChosenCounty['Date'].dt.month>month_from) & (ChosenCounty['Date'].dt.month<month_to)) | ((ChosenCounty['Date'].dt.month==month_to) & (ChosenCounty['Date'].dt.day<=day_to)))) ]
-else:
-    small_ChosenCounty = ChosenCounty[(((ChosenCounty['Date'].dt.year==year_from) & (ChosenCounty['Date'].dt.month==month_from) & (ChosenCounty['Date'].dt.day>=day_from)) | ((ChosenCounty['Date'].dt.year>year_from) & (ChosenCounty['Date'].dt.year<year_to)) | ((ChosenCounty['Date'].dt.year==year_to) & ((ChosenCounty['Date'].dt.month<month_to) | ((ChosenCounty['Date'].dt.month==month_to) & (ChosenCounty['Date'].dt.day<=day_to))))) ]
-
-
-#%% Plot data
-fig = px.area(small_ChosenCounty, x="Date", y='total_cases')
-fig.show()
-
 
 #%% Select the chosen county
 ChosenCounty = final_confirmed.loc[(final_confirmed["County Name"] == chosen_county) & (final_confirmed['State']==chosen_state)]
