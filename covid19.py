@@ -5,44 +5,44 @@ Created on Fri Feb 18 21:55:31 2022
 #%% importing pandas, nump, plotly and datetime
 import pandas as pd
 import plotly.express as px
+
+import plotly.io as pio
 import numpy as np
 from datetime import datetime
 
 #%% Opening and reading our files
+pio.renderers.default = "browser"
 confirmed = pd.read_csv('https://raw.githubusercontent.com/bbernas/Covid19Data/master/covid_confirmed_usafacts.csv')
-print(confirmed.head())
 county_pop = pd.read_csv('https://raw.githubusercontent.com/bbernas/Covid19Data/master/covid_county_population_usafacts.csv')
-print(county_pop.head())
 deaths = pd.read_csv('https://raw.githubusercontent.com/bbernas/Covid19Data/master/covid_deaths_usafacts.csv')
-print(deaths.head())
 confirmed_copy=confirmed.copy()
 
 
 ### TOTAL CASES ###
 #%% Set the index
 index = confirmed.set_index(["countyFIPS","County Name","State","StateFIPS"])
-print(index) #OK
 
 #%% Stack
 stacked_confirmed = index.stack()
-print(stacked_confirmed)
+
 
 #%% Rename Series before converting into a DataFrame
 new_confirmed = stacked_confirmed.rename('total_cases')
 
 #%% convert Series into DataFrame
 final_confirmed = new_confirmed.to_frame()
-print(final_confirmed)
-print(final_confirmed.index)
 
 #%% Reset index
 final_confirmed.reset_index(inplace=True)
-print(final_confirmed.index)
-print(final_confirmed)
 
 
 #%% Rename column Date
 final_confirmed.rename(columns={'level_4':'Date'},inplace=True)
+
+
+#%% Convert date values into datetime data
+final_confirmed['Date'] = pd.to_datetime(final_confirmed['Date'])
+
 print(final_confirmed)
 
 #%% Convert date values into datetime data
@@ -51,9 +51,7 @@ print(final_confirmed['Date'])
 
 
 #%% Check what are the index and the columns
-print(final_confirmed.index)
 columns_names = final_confirmed.columns
-print(columns_names)
 
 #%% Choose a county to explore
 chosen_county = 'Bibb County '
@@ -166,6 +164,12 @@ else:
 small_cases_groupedbydate = small_cases.groupby("Date")
 print(small_cases_groupedbydate.sum())
 
+
+#%% Plot the evolution of cases as a function of time in the wole US
+fig_casesUS = px.area(small_cases_groupedbydate.sum(), x="StateFIPS", y='total_cases',title=("evolution of Covid cases in the US from "+str(month_from)+"/"+str(day_from)+"/"+str(year_from)+" to "+str(month_to)+"/"+str(day_to)+"/"+str(year_to)))
+fig_casesUS.show()
+
+
 #%% Plot the evolution of cases as a function of time in the wole US
 fig_casesUS = px.area(small_cases_groupedbydate.sum(), x="StateFIPS", y='total_cases',title=("evolution of Covid cases in the US from "+str(month_from)+"/"+str(day_from)+"/"+str(year_from)+" to "+str(month_to)+"/"+str(day_to)+"/"+str(year_to)))
 fig_casesUS.show()
@@ -177,4 +181,5 @@ print(small_cases_groupedbystate.sum())
 #%% Plot the evolution of cases depending on the state
 fig_casesUS = px.area(small_cases_groupedbystate.sum(), x="StateFIPS", y='total_cases',title=("evolution of Covid cases in the US from "+str(month_from)+"/"+str(day_from)+"/"+str(year_from)+" to "+str(month_to)+"/"+str(day_to)+"/"+str(year_to)))
 fig_casesUS.show()
+
 
