@@ -62,27 +62,16 @@ ChosenCounty = final_confirmed.loc[(final_confirmed["County Name"] == chosen_cou
 
 #%% Choose a period to look at
 ##FROM
-day_from = 29 #included
-month_from = 3
-year_from = 2020
+start = '2020-03-29'
 
 ##TO
-day_to = 15 #included
-month_to = 4
-year_to = 2020
+end = '2020-04-15'
 
 #%% Select the data for the period of interest
-if (year_from == year_to) :
-    if (month_from == month_to):
-        small_ChosenCounty = ChosenCounty[(ChosenCounty['Date'].dt.year==year_from) & (ChosenCounty['Date'].dt.month==month_from) & (ChosenCounty['Date'].dt.day>=day_from) & (ChosenCounty['Date'].dt.day<=day_to) ]
-    else:
-        small_ChosenCounty = ChosenCounty[((ChosenCounty['Date'].dt.year==year_from) & (((ChosenCounty['Date'].dt.month==month_from) & (ChosenCounty['Date'].dt.day>=day_from)) | ((ChosenCounty['Date'].dt.month>month_from) & (ChosenCounty['Date'].dt.month<month_to)) | ((ChosenCounty['Date'].dt.month==month_to) & (ChosenCounty['Date'].dt.day<=day_to)))) ]
-else:
-    small_ChosenCounty = ChosenCounty[(((ChosenCounty['Date'].dt.year==year_from) & (ChosenCounty['Date'].dt.month==month_from) & (ChosenCounty['Date'].dt.day>=day_from)) | ((ChosenCounty['Date'].dt.year>year_from) & (ChosenCounty['Date'].dt.year<year_to)) | ((ChosenCounty['Date'].dt.year==year_to) & ((ChosenCounty['Date'].dt.month<month_to) | ((ChosenCounty['Date'].dt.month==month_to) & (ChosenCounty['Date'].dt.day<=day_to))))) ]
-
+small_ChosenCounty = ChosenCounty[(ChosenCounty['Date']>=start) & (ChosenCounty['Date']<=end)]
 
 #%% Plot data
-fig_cases = px.area(small_ChosenCounty, x="Date", y='total_cases',title=("evolution of Covid cases in "+chosen_county+" from "+str(month_from)+"/"+str(day_from)+"/"+str(year_from)+" to "+str(month_to)+"/"+str(day_to)+"/"+str(year_to)))
+fig_cases = px.area(small_ChosenCounty, x="Date", y='total_cases',title=("evolution of Covid cases in "+chosen_county+"from "+str(start)+" to "+str(end)))
 fig_cases.show()
 
 ### TOTAL DEATHS ###
@@ -128,17 +117,10 @@ print(columns_names_deaths)
 ChosenCounty_deaths = final_deaths.loc[(final_confirmed["County Name"] == chosen_county) & (final_confirmed['State']==chosen_state)]
 
 #%% Select the data for the period of interest
-if (year_from == year_to) :
-    if (month_from == month_to):
-        small_ChosenCounty_deaths = ChosenCounty_deaths[(ChosenCounty_deaths['Date'].dt.year==year_from) & (ChosenCounty_deaths['Date'].dt.month==month_from) & (ChosenCounty_deaths['Date'].dt.day>=day_from) & (ChosenCounty_deaths['Date'].dt.day<=day_to) ]
-    else:
-        small_ChosenCounty_deaths = ChosenCounty_deaths[((ChosenCounty_deaths['Date'].dt.year==year_from) & (((ChosenCounty_deaths['Date'].dt.month==month_from) & (ChosenCounty_deaths['Date'].dt.day>=day_from)) | ((ChosenCounty_deaths['Date'].dt.month>month_from) & (ChosenCounty_deaths['Date'].dt.month<month_to)) | ((ChosenCounty_deaths['Date'].dt.month==month_to) & (ChosenCounty_deaths['Date'].dt.day<=day_to)))) ]
-else:
-    small_ChosenCounty_deaths = ChosenCounty_deaths[(((ChosenCounty_deaths['Date'].dt.year==year_from) & (ChosenCounty_deaths['Date'].dt.month==month_from) & (ChosenCounty_deaths['Date'].dt.day>=day_from)) | ((ChosenCounty_deaths['Date'].dt.year>year_from) & (ChosenCounty_deaths['Date'].dt.year<year_to)) | ((ChosenCounty_deaths['Date'].dt.year==year_to) & ((ChosenCounty_deaths['Date'].dt.month<month_to) | ((ChosenCounty_deaths['Date'].dt.month==month_to) & (ChosenCounty_deaths['Date'].dt.day<=day_to))))) ]
-
+small_ChosenCounty_deaths = ChosenCounty_deaths[(ChosenCounty_deaths['Date']>=start) & (ChosenCounty_deaths['Date']<=end)]
 
 #%% Plot data
-fig_deaths = px.area(small_ChosenCounty_deaths, x="Date", y='total_deaths',title=("evolution of Covid deaths in "+chosen_county+" from "+str(month_from)+"/"+str(day_from)+"/"+str(year_from)+" to "+str(month_to)+"/"+str(day_to)+"/"+str(year_to)))
+fig_deaths = px.area(small_ChosenCounty_deaths, x="Date", y='total_deaths',title=("evolution of Covid deaths in "+chosen_county+"from "+str(start)+" to "+str(end)))
 fig_deaths.show()
 
 #%% GROUP BY
@@ -151,7 +133,19 @@ cases_inchosencounty_groupedbydate = small_ChosenCounty.groupby("Date")
 #%%
 print(cases_inchosencounty_groupedbydate.sum())
 
+#%% Group ChosenCounty by dates
+chosencounty_groupbydate = ChosenCounty.groupby("Date").sum()
+print(chosencounty_groupbydate)
+#chosencounty_groupedbydate = chosencounty_groupbydate.to_frame()
+#print(chosencounty_groupedbydate.head())
+
+#%%
+#%% Plot the evolution of cases as a function of time in the wole US
+fig_cases_chosencounty = px.area(chosencounty_groupbydate, x="Date", y='total_cases',title=("evolution of Covid cases in "+chosen_county+"from "+str(start)+" to "+str(end)))
+fig_cases_chosencounty.show()
+
 #%% Select all counties for the period of interest
+small_ChosenCounty = ChosenCounty[(ChosenCounty['Date']>=start) & (ChosenCounty['Date']<=end)]
 if (year_from == year_to) :
     if (month_from == month_to):
         small_cases = final_confirmed[(final_confirmed['Date'].dt.year==year_from) & (final_confirmed['Date'].dt.month==month_from) & (final_confirmed['Date'].dt.day>=day_from) & (final_confirmed['Date'].dt.day<=day_to) ]
@@ -182,4 +176,8 @@ print(small_cases_groupedbystate.sum())
 fig_casesUS = px.area(small_cases_groupedbystate.sum(), x="StateFIPS", y='total_cases',title=("evolution of Covid cases in the US from "+str(month_from)+"/"+str(day_from)+"/"+str(year_from)+" to "+str(month_to)+"/"+str(day_to)+"/"+str(year_to)))
 fig_casesUS.show()
 
+
+##groupbydate = small_cases.groupby(["Dates"]["total_cases"]).sum()
+#pd.to_frame[groupbydate]
+#rest_index
 
