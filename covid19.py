@@ -124,25 +124,55 @@ fig_deaths = px.area(small_ChosenCounty_deaths, x="Date", y='total_deaths',title
 fig_deaths.show()
 
 #%% GROUP BY
-deaths_grouped_by_date = final_deaths.groupby("Date")
-deaths_grouped_by_state = final_deaths.groupby("State")
-cases_grouped_by_date = final_confirmed.groupby("Date")
-cases_grouped_by_state = final_confirmed.groupby("State")
-cases_inchosencounty_groupedbydate = small_ChosenCounty.groupby("Date")
+deaths_grouped = final_deaths.groupby(["Date","StateFIPS"]).sum()
+cases_grouped = final_confirmed.groupby(["Date","StateFIPS"]).sum()
+cases_chosencounty_grpdate = ChosenCounty.groupby("Date").sum()
+deaths_chosencounty_grpdate = ChosenCounty_deaths.groupby("Date").sum()
 
 #%%
-print(cases_inchosencounty_groupedbydate.sum())
+print(deaths_grouped)
+print(cases_grouped)
+print(cases_chosencounty_grpdate)
+print(deaths_chosencounty_grpdate)
 
-#%% Group ChosenCounty by dates
-chosencounty_groupbydate = ChosenCounty.groupby("Date").sum()
-print(chosencounty_groupbydate)
-#chosencounty_groupedbydate = chosencounty_groupbydate.to_frame()
-#print(chosencounty_groupedbydate.head())
+#%% Reset the index
+deaths_grouped.reset_index(inplace=True)
+print(deaths_grouped)
+cases_grouped.reset_index(inplace=True)
+print(cases_grouped)
+cases_chosencounty_grpdate.reset_index(inplace=True)
+print(cases_chosencounty_grpdate)
+deaths_chosencounty_grpdate.reset_index(inplace=True)
+print(deaths_chosencounty_grpdate)
 
-#%%
-#%% Plot the evolution of cases as a function of time in the wole US
-fig_cases_chosencounty = px.area(chosencounty_groupbydate, x="Date", y='total_cases',title=("evolution of Covid cases in "+chosen_county+"from "+str(start)+" to "+str(end)))
+#%% Plot the evolution of cases as a function of time chosen county
+fig_cases_chosencounty = px.area(cases_chosencounty_grpdate, x="Date", y='total_cases',title=("evolution of Covid cases in "+chosen_county))
 fig_cases_chosencounty.show()
+fig_deaths_chosencounty = px.area(deaths_chosencounty_grpdate, x="Date", y='total_deaths',title=("evolution of Covid deaths in "+chosen_county))
+fig_deaths_chosencounty.show()
+
+#%% Plot the evolution of deaths as a function of time in the wole US
+fig_cases_deaths_grouped = px.area(deaths_grouped, x="Date", y='total_deaths',title=("evolution of Covid deaths in the US as a function of time"))
+fig_cases_deaths_grouped.show()
+#%% Plot the evolution of cases as a function of time in the wole US
+fig_cases_cases_grouped = px.area(cases_grouped, x="Date", y='total_cases',title=("evolution of Covid cases in the US as a function of time"))
+fig_cases_cases_grouped.show()
+
+#%% Choose States
+chosen_state1 = 12
+chosen_state2 = 17
+chosen_state3 = 6
+cases_in_3_States = final_confirmed.loc[(final_confirmed["StateFIPS"] == chosen_state1) | (final_confirmed['StateFIPS']==chosen_state2) | (final_confirmed['StateFIPS']==chosen_state3)]
+
+#%% Group by date
+cases_chosencounties_grpdate = cases_in_3_States.groupby(["Date","StateFIPS"]).sum()
+cases_chosencounties_grpdate.reset_index(inplace=True)
+print(cases_chosencounties_grpdate)
+fig_cases_in_3_States = px.area(cases_chosencounties_grpdate, x="StateFIPS", y='total_cases',title=("Total Covid cases in 3 states"))
+fig_cases_in_3_States.show()
+
+
+
 
 #%% Select all counties for the period of interest
 small_ChosenCounty = ChosenCounty[(ChosenCounty['Date']>=start) & (ChosenCounty['Date']<=end)]
