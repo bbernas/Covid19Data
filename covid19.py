@@ -125,7 +125,7 @@ fig_deaths.show()
 
 #%% GROUP BY
 deaths_grouped = final_deaths.groupby(["Date","StateFIPS"]).sum()
-cases_grouped = final_confirmed.groupby(["Date","StateFIPS"]).sum()
+cases_grouped = final_confirmed.groupby(["Date","State"]).sum()
 cases_chosencounty_grpdate = ChosenCounty.groupby("Date").sum()
 deaths_chosencounty_grpdate = ChosenCounty_deaths.groupby("Date").sum()
 
@@ -168,7 +168,7 @@ cases_in_3_States = final_confirmed.loc[((final_confirmed["StateFIPS"] == chosen
 cases_chosencounties_grpdate = cases_in_3_States.groupby(["Date","State"]).sum()
 cases_chosencounties_grpdate.reset_index(inplace=True)
 print(cases_chosencounties_grpdate)
-fig_cases_in_3_States = px.bar(cases_chosencounties_grpdate, x="State", y='total_cases',title=("Total Covid cases in 3 states"))
+fig_cases_in_3_States = px.bar(cases_chosencounties_grpdate, x="State", y='total_cases', color = "State",title=("Total Covid cases in 3 states"))
 fig_cases_in_3_States.show()
 
 ##groupbydate = small_cases.groupby(["Dates"]["total_cases"]).sum()
