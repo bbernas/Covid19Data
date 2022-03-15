@@ -74,6 +74,7 @@ small_ChosenCounty = ChosenCounty[(ChosenCounty['Date']>=start) & (ChosenCounty[
 fig_cases = px.area(small_ChosenCounty, x="Date", y='total_cases',title=("evolution of Covid cases in "+chosen_county+"from "+str(start)+" to "+str(end)))
 fig_cases.show()
 
+
 ### TOTAL DEATHS ###
 #%% Set the index
 index_deaths = deaths.set_index(["countyFIPS","County Name","State","StateFIPS"])
@@ -174,4 +175,5 @@ fig_cases_in_3_States.show()
 ##groupbydate = small_cases.groupby(["Dates"]["total_cases"]).sum()
 #pd.to_frame[groupbydate]
 #rest_index
+#%% diff for one county
 
