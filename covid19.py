@@ -77,6 +77,7 @@ fig_cases = px.bar(small_ChosenCounty, x="Date", y='total_cases',title=("evoluti
 fig_cases.show()
 #px.bar or px.area or px.line
 
+
 ### TOTAL DEATHS ###
 #%% Set the index
 index_deaths = deaths.set_index(["countyFIPS","County Name","State","StateFIPS"])
@@ -128,7 +129,7 @@ fig_deaths.show()
 
 #%% GROUP BY
 deaths_grouped = final_deaths.groupby(["Date","StateFIPS"]).sum()
-cases_grouped = final_confirmed.groupby(["Date","StateFIPS"]).sum()
+cases_grouped = final_confirmed.groupby(["Date","State"]).sum()
 cases_chosencounty_grpdate = ChosenCounty.groupby("Date").sum()
 deaths_chosencounty_grpdate = ChosenCounty_deaths.groupby("Date").sum()
 
@@ -167,12 +168,15 @@ chosen_state2 = "FL"
 chosen_state3 = "IL"
 cases_in_3_States = final_confirmed.loc[(final_confirmed["State"] == chosen_state1) | (final_confirmed['State']==chosen_state2) | (final_confirmed['State']==chosen_state3)]
 
+
 #%% Group by date
 cases_chosencounties_grpdate = cases_in_3_States.groupby(["Date","State"]).sum()
 cases_chosencounties_grpdate.reset_index(inplace=True)
 print(cases_chosencounties_grpdate)
-fig_cases_in_3_States = px.bar(cases_chosencounties_grpdate, x="State", y='total_cases',title=("Total Covid cases in 3 states"))
+
+fig_cases_in_3_States = px.bar(cases_chosencounties_grpdate, x="State", y='total_cases', color = "State",title=("Total Covid cases in 3 states"))
 fig_cases_in_3_States.show()
+
 #plot new cases per day
 
 #%% Try Subplot
@@ -225,4 +229,5 @@ fig_casesUS.show()
 ##groupbydate = small_cases.groupby(["Dates"]["total_cases"]).sum()
 #pd.to_frame[groupbydate]
 #rest_index
+#%% diff for one county
 
