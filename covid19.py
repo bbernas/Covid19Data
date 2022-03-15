@@ -9,6 +9,8 @@ import plotly.express as px
 import plotly.io as pio
 import numpy as np
 from datetime import datetime
+from plotly.subplots import make_subplots
+import plotly.graph_objects as go
 
 #%% Opening and reading our files
 pio.renderers.default = "browser"
@@ -71,8 +73,9 @@ end = '2020-04-15'
 small_ChosenCounty = ChosenCounty[(ChosenCounty['Date']>=start) & (ChosenCounty['Date']<=end)]
 
 #%% Plot data
-fig_cases = px.area(small_ChosenCounty, x="Date", y='total_cases',title=("evolution of Covid cases in "+chosen_county+"from "+str(start)+" to "+str(end)))
+fig_cases = px.bar(small_ChosenCounty, x="Date", y='total_cases',title=("evolution of Covid cases in "+chosen_county+"from "+str(start)+" to "+str(end)))
 fig_cases.show()
+#px.bar or px.area or px.line
 
 ### TOTAL DEATHS ###
 #%% Set the index
@@ -120,7 +123,7 @@ ChosenCounty_deaths = final_deaths.loc[(final_confirmed["County Name"] == chosen
 small_ChosenCounty_deaths = ChosenCounty_deaths[(ChosenCounty_deaths['Date']>=start) & (ChosenCounty_deaths['Date']<=end)]
 
 #%% Plot data
-fig_deaths = px.area(small_ChosenCounty_deaths, x="Date", y='total_deaths',title=("evolution of Covid deaths in "+chosen_county+"from "+str(start)+" to "+str(end)))
+fig_deaths = px.line(small_ChosenCounty_deaths, x="Date", y='total_deaths',title=("evolution of Covid deaths in "+chosen_county+"from "+str(start)+" to "+str(end)))
 fig_deaths.show()
 
 #%% GROUP BY
@@ -155,23 +158,35 @@ fig_deaths_chosencounty.show()
 fig_cases_deaths_grouped = px.area(deaths_grouped, x="Date", y='total_deaths',title=("evolution of Covid deaths in the US as a function of time"))
 fig_cases_deaths_grouped.show()
 #%% Plot the evolution of cases as a function of time in the wole US
-fig_cases_cases_grouped = px.area(cases_grouped, x="Date", y='total_cases',title=("evolution of Covid cases in the US as a function of time"))
+fig_cases_cases_grouped = px.line(cases_grouped, x="Date", y='total_cases',title=("evolution of Covid cases in the US as a function of time"))
 fig_cases_cases_grouped.show()
 
 #%% Choose States
-chosen_state1 = 12
-chosen_state2 = 17
-chosen_state3 = 6
-cases_in_3_States = final_confirmed.loc[(final_confirmed["StateFIPS"] == chosen_state1) | (final_confirmed['StateFIPS']==chosen_state2) | (final_confirmed['StateFIPS']==chosen_state3)]
+chosen_state1 = "CA"
+chosen_state2 = "FL"
+chosen_state3 = "IL"
+cases_in_3_States = final_confirmed.loc[(final_confirmed["State"] == chosen_state1) | (final_confirmed['State']==chosen_state2) | (final_confirmed['State']==chosen_state3)]
 
 #%% Group by date
-cases_chosencounties_grpdate = cases_in_3_States.groupby(["Date","StateFIPS"]).sum()
+cases_chosencounties_grpdate = cases_in_3_States.groupby(["Date","State"]).sum()
 cases_chosencounties_grpdate.reset_index(inplace=True)
 print(cases_chosencounties_grpdate)
-fig_cases_in_3_States = px.area(cases_chosencounties_grpdate, x="StateFIPS", y='total_cases',title=("Total Covid cases in 3 states"))
+fig_cases_in_3_States = px.bar(cases_chosencounties_grpdate, x="State", y='total_cases',title=("Total Covid cases in 3 states"))
 fig_cases_in_3_States.show()
+#plot new cases per day
 
-
+#%% Try Subplot
+x1 = cases_chosencounties_grpdate(["State"]==chosen_state1)["Date"]
+y1 = cases_chosencounties_grpdate(["State"]==chosen_state1)["total_cases"]
+x2 = cases_chosencounties_grpdate(["State"]==chosen_state2)["Date"]
+y2 = cases_chosencounties_grpdate(["State"]==chosen_state2)["total_cases"]
+x3 = cases_chosencounties_grpdate(["State"]==chosen_state3)["Date"]
+y3 = cases_chosencounties_grpdate(["State"]==chosen_state3)["total_cases"]
+fig = make_subplots(rows=3, cols=1,subplot_titles=(chosen_state1, chosen_state2, chosen_state3))
+fig.append_trace(go.Scatter(x=x1,y=y1), row=1, col=1)
+fig.append_trace(go.Scatter(x=x2,y=y2), row=2, col=1)
+fig.append_trace(go.Scatter(x=x3,y=y3), row=3, col=1)
+fig.show()
 
 
 #%% Select all counties for the period of interest
