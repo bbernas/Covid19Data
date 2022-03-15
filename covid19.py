@@ -125,7 +125,7 @@ fig_deaths.show()
 
 #%% GROUP BY
 deaths_grouped = final_deaths.groupby(["Date","StateFIPS"]).sum()
-cases_grouped = final_confirmed.groupby(["Date","StateFIPS"]).sum()
+cases_grouped = final_confirmed.groupby(["Date","State"]).sum()
 cases_chosencounty_grpdate = ChosenCounty.groupby("Date").sum()
 deaths_chosencounty_grpdate = ChosenCounty_deaths.groupby("Date").sum()
 
@@ -162,50 +162,14 @@ fig_cases_cases_grouped.show()
 chosen_state1 = 12
 chosen_state2 = 17
 chosen_state3 = 6
-cases_in_3_States = final_confirmed.loc[(final_confirmed["StateFIPS"] == chosen_state1) | (final_confirmed['StateFIPS']==chosen_state2) | (final_confirmed['StateFIPS']==chosen_state3)]
+cases_in_3_States = final_confirmed.loc[((final_confirmed["StateFIPS"] == chosen_state1) | (final_confirmed['StateFIPS']==chosen_state2) | (final_confirmed['StateFIPS']==chosen_state3)) & (final_confirmed['Date'] == "2022-02-15")]
 
 #%% Group by date
-cases_chosencounties_grpdate = cases_in_3_States.groupby(["Date","StateFIPS"]).sum()
+cases_chosencounties_grpdate = cases_in_3_States.groupby(["Date","State"]).sum()
 cases_chosencounties_grpdate.reset_index(inplace=True)
 print(cases_chosencounties_grpdate)
-fig_cases_in_3_States = px.area(cases_chosencounties_grpdate, x="StateFIPS", y='total_cases',title=("Total Covid cases in 3 states"))
+fig_cases_in_3_States = px.bar(cases_chosencounties_grpdate, x="State", y='total_cases', color = "State",title=("Total Covid cases in 3 states"))
 fig_cases_in_3_States.show()
-
-
-
-
-#%% Select all counties for the period of interest
-small_ChosenCounty = ChosenCounty[(ChosenCounty['Date']>=start) & (ChosenCounty['Date']<=end)]
-if (year_from == year_to) :
-    if (month_from == month_to):
-        small_cases = final_confirmed[(final_confirmed['Date'].dt.year==year_from) & (final_confirmed['Date'].dt.month==month_from) & (final_confirmed['Date'].dt.day>=day_from) & (final_confirmed['Date'].dt.day<=day_to) ]
-    else:
-        small_cases = final_confirmed[((final_confirmed['Date'].dt.year==year_from) & (((final_confirmed['Date'].dt.month==month_from) & (final_confirmed['Date'].dt.day>=day_from)) | ((final_confirmed['Date'].dt.month>month_from) & (final_confirmed['Date'].dt.month<month_to)) | ((final_confirmed['Date'].dt.month==month_to) & (final_confirmed['Date'].dt.day<=day_to)))) ]
-else:
-    small_cases = final_confirmed[(((final_confirmed['Date'].dt.year==year_from) & (final_confirmed['Date'].dt.month==month_from) & (final_confirmed['Date'].dt.day>=day_from)) | ((final_confirmed['Date'].dt.year>year_from) & (final_confirmed['Date'].dt.year<year_to)) | ((final_confirmed['Date'].dt.year==year_to) & ((final_confirmed['Date'].dt.month<month_to) | ((final_confirmed['Date'].dt.month==month_to) & (final_confirmed['Date'].dt.day<=day_to))))) ]
-
-#%% Goup by Dates
-small_cases_groupedbydate = small_cases.groupby("Date")
-print(small_cases_groupedbydate.sum())
-
-
-#%% Plot the evolution of cases as a function of time in the wole US
-fig_casesUS = px.area(small_cases_groupedbydate.sum(), x="StateFIPS", y='total_cases',title=("evolution of Covid cases in the US from "+str(month_from)+"/"+str(day_from)+"/"+str(year_from)+" to "+str(month_to)+"/"+str(day_to)+"/"+str(year_to)))
-fig_casesUS.show()
-
-
-#%% Plot the evolution of cases as a function of time in the wole US
-fig_casesUS = px.area(small_cases_groupedbydate.sum(), x="StateFIPS", y='total_cases',title=("evolution of Covid cases in the US from "+str(month_from)+"/"+str(day_from)+"/"+str(year_from)+" to "+str(month_to)+"/"+str(day_to)+"/"+str(year_to)))
-fig_casesUS.show()
-
-#%% Goup by states
-small_cases_groupedbystate = small_cases.groupby("State")
-print(small_cases_groupedbystate.sum())
-
-#%% Plot the evolution of cases depending on the state
-fig_casesUS = px.area(small_cases_groupedbystate.sum(), x="StateFIPS", y='total_cases',title=("evolution of Covid cases in the US from "+str(month_from)+"/"+str(day_from)+"/"+str(year_from)+" to "+str(month_to)+"/"+str(day_to)+"/"+str(year_to)))
-fig_casesUS.show()
-
 
 ##groupbydate = small_cases.groupby(["Dates"]["total_cases"]).sum()
 #pd.to_frame[groupbydate]
