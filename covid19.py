@@ -2,6 +2,11 @@
 Created on Fri Feb 18 21:55:31 2022
 @author: leale & bbernas
 """
+
+
+
+###STAGE 1
+
 #%% importing pandas, nump, plotly and datetime
 import pandas as pd
 import plotly.express as px
@@ -127,6 +132,14 @@ small_ChosenCounty_deaths = ChosenCounty_deaths[(ChosenCounty_deaths['Date']>=st
 fig_deaths = px.line(small_ChosenCounty_deaths, x="Date", y='total_deaths',title=("evolution of Covid deaths in "+chosen_county+"from "+str(start)+" to "+str(end)))
 fig_deaths.show()
 
+
+
+
+
+
+
+### STAGE 2
+
 #%% GROUP BY
 deaths_grouped = final_deaths.groupby(["Date","StateFIPS"]).sum()
 cases_grouped = final_confirmed.groupby(["Date","State"]).sum()
@@ -179,18 +192,38 @@ fig_cases_in_3_States.show()
 
 #plot new cases per day
 
-#%% Try Subplot
-x1 = cases_chosencounties_grpdate(["State"]==chosen_state1)["Date"]
-y1 = cases_chosencounties_grpdate(["State"]==chosen_state1)["total_cases"]
-x2 = cases_chosencounties_grpdate(["State"]==chosen_state2)["Date"]
-y2 = cases_chosencounties_grpdate(["State"]==chosen_state2)["total_cases"]
-x3 = cases_chosencounties_grpdate(["State"]==chosen_state3)["Date"]
-y3 = cases_chosencounties_grpdate(["State"]==chosen_state3)["total_cases"]
+
+#%% Subplot of the evolution of total cases in 3 diff states
+state1 = cases_chosencounties_grpdate[cases_chosencounties_grpdate["State"]==chosen_state1]
+state2 = cases_chosencounties_grpdate[cases_chosencounties_grpdate["State"]==chosen_state2]
+state3 = cases_chosencounties_grpdate[cases_chosencounties_grpdate["State"]==chosen_state3]
 fig = make_subplots(rows=3, cols=1,subplot_titles=(chosen_state1, chosen_state2, chosen_state3))
-fig.append_trace(go.Scatter(x=x1,y=y1), row=1, col=1)
-fig.append_trace(go.Scatter(x=x2,y=y2), row=2, col=1)
-fig.append_trace(go.Scatter(x=x3,y=y3), row=3, col=1)
+fig.append_trace(go.Scatter(x=state1["Date"],y=state1["total_cases"]), row=1, col=1)
+fig.append_trace(go.Scatter(x=state2["Date"],y=state2["total_cases"]), row=2, col=1)
+fig.append_trace(go.Scatter(x=state3["Date"],y=state3["total_cases"]), row=3, col=1)
+fig.update_layout(title_text="Evolution of total cases in "+chosen_state1+", "+chosen_state2+" and "+chosen_state3)
 fig.show()
+
+
+
+
+
+
+### STAGE 3
+
+#%%
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 #%% Select all counties for the period of interest
