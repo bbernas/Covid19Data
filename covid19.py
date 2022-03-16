@@ -234,6 +234,7 @@ casesperdaybib.show()
 
 
 
+
 #%% Select all counties for the period of interest
 small_ChosenCounty = ChosenCounty[(ChosenCounty['Date']>=start) & (ChosenCounty['Date']<=end)]
 if (year_from == year_to) :
