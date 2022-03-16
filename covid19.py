@@ -211,7 +211,16 @@ fig.show()
 
 ### STAGE 3
 
-#%%
+#%% diff for one county
+totalcases = ChosenCounty['total_cases']
+dates = ChosenCounty['Date']
+Bibb = pd.concat([dates, totalcases], axis = 1)
+Bibb.set_index('Date')
+BibbDate = Bibb['Date']
+BibbNewCase = Bibb['total_cases'].diff()
+Bibb = pd.concat([BibbDate, BibbNewCase], axis = 1)
+casesperdaybib = px.bar(Bibb, x = 'Date', y='total_cases', title=("New Daily Cases In Bibb County"))
+casesperdaybib.show()
 
 
 
@@ -262,5 +271,3 @@ fig_casesUS.show()
 ##groupbydate = small_cases.groupby(["Dates"]["total_cases"]).sum()
 #pd.to_frame[groupbydate]
 #rest_index
-#%% diff for one county
-
