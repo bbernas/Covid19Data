@@ -238,18 +238,53 @@ ALNewCases = pd.concat([ALdate, ALNewCase], axis = 1)
 ALNewCases1 = ALNewCases.groupby('Date').sum()
 dates.reset_index()
 ALNewCases1.reset_index()
-a = pd.concat([ALNewCases1, dates ], axis = 1)
+a = pd.concat([dates, ALNewCases1], axis = 1)
 a.set_index('Date')
 casesperdayAL = px.bar(a, x='Date', y='total_cases', title=("New Daily Cases In AL"))
 casesperdayAL.show()
 
+
 ### STAGE 4
 
-#%%
-newChosenCounty = ChosenCounty.rolling(window=7)
+#%% 7-day average for BibbCounty
+totalcases3 = Bibb['total_cases']
+new_totalcases = totalcases3.rolling(window=7).sum() #or mean
+dates = ChosenCounty['Date']
+Bibb3 = pd.concat([dates, new_totalcases], axis = 1)
+casesperdaybib3 = px.bar(Bibb3, x = 'Date', y='total_cases', title=("New Daily Cases In Bibb County"))
+casesperdaybib3.show()
 
-#%%
-print(newChosenCounty)
+#%% 14-day average for BibbCounty (other way to do that)
+
+totalcases = ChosenCounty['total_cases']
+new_totalcases = totalcases.rolling(window=14).sum()
+dates = ChosenCounty['Date']
+Bibb = pd.concat([dates, new_totalcases], axis = 1)
+Bibb.set_index('Date')
+BibbDate = Bibb['Date']
+BibbNewCase = Bibb['total_cases'].diff()
+Bibb = pd.concat([BibbDate, BibbNewCase], axis = 1)
+casesperdaybib = px.bar(Bibb, x = 'Date', y='total_cases', title=("New Daily Cases In Bibb County"))
+casesperdaybib.show()
+
+
+
+
+#%% 7-day average for 
+
+#%% 7-day average for the whole US
+
+totalcases = final_confirmed['total_cases']
+new_totalcases = totalcases.rolling(window=7).sum()
+dates = final_confirmed['Date']
+Bibb = pd.concat([dates, new_totalcases], axis = 1)
+Bibb.set_index('Date')
+BibbDate = Bibb['Date']
+BibbNewCase = Bibb['total_cases'].diff()
+Bibb = pd.concat([BibbDate, BibbNewCase], axis = 1)
+casesperdaybib = px.bar(Bibb, x = 'Date', y='total_cases', title=("New Daily Cases In Bibb County"))
+casesperdaybib.show()
+
 
 
 #%%
@@ -267,4 +302,13 @@ s = pd.Series(range(5))
 s.rolling(window=2).sum()
 #rolling on total cases with window=7 or 14 
 
+
+
+
+#%% Tests
+
+test = pd.DataFrame({'B':[0,1,2,3,4,7,3,9]})
+print(test)
+print(test.rolling(window=3).sum())
+print(test.rolling(window=3).mean())
 
