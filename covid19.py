@@ -227,8 +227,21 @@ casesperdaybib = px.bar(Bibb, x = 'Date', y='total_cases', title=("New Daily Cas
 casesperdaybib.show()
 
 
-
-
+AL = final_confirmed.loc[(final_confirmed['State']== chosen_state)]
+ALCases = AL['total_cases']
+date = AL['Date']
+ALCase = pd.concat([date, ALCases], axis = 1)
+ALCase.set_index('Date')
+ALdate = ALCase['Date']
+ALNewCase = ALCase['total_cases'].diff()
+ALNewCases = pd.concat([ALdate, ALNewCase], axis = 1)
+ALNewCases1 = ALNewCases.groupby('Date').sum()
+dates.reset_index()
+ALNewCases1.reset_index()
+a = pd.concat([ALNewCases1, dates ], axis = 1)
+a.set_index('Date')
+casesperdayAL = px.bar(a, x='Date', y='total_cases', title=("New Daily Cases In AL"))
+casesperdayAL.show()
 
 ### STAGE 4
 
