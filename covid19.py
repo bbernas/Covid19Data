@@ -201,6 +201,7 @@ fig.append_trace(go.Bar(x=state1["Date"],y=state1["total_cases"]), row=1, col=1)
 fig.append_trace(go.Bar(x=state2["Date"],y=state2["total_cases"]), row=2, col=1)
 fig.append_trace(go.Bar(x=state3["Date"],y=state3["total_cases"]), row=3, col=1)
 fig.update_layout(title_text="Evolution of total cases in "+chosen_state1+", "+chosen_state2+" and "+chosen_state3)
+fig.update_layout(showlegend=False)
 fig.show()
 
 #%% Same plot but with a shared y-axis
@@ -210,6 +211,7 @@ fig2.append_trace(go.Bar(x=state1["Date"],y=state1["total_cases"]), row=1, col=1
 fig2.append_trace(go.Bar(x=state2["Date"],y=state2["total_cases"]), row=1, col=2)
 fig2.append_trace(go.Bar(x=state3["Date"],y=state3["total_cases"]), row=1, col=3)
 fig2.update_layout(title_text="Evolution of total cases in "+chosen_state1+", "+chosen_state2+" and "+chosen_state3)
+fig2.update_layout(showlegend=False)
 fig2.show()
 
 
@@ -232,68 +234,52 @@ casesperdaybib.show()
 ### STAGE 4
 
 #%% 7-day average for BibbCounty
-totalcases3 = Bibb['total_cases']
-new_totalcases = totalcases3.rolling(window=7).sum() #or mean
-dates = ChosenCounty['Date']
-Bibb3 = pd.concat([dates, new_totalcases], axis = 1)
-casesperdaybib3 = px.bar(Bibb3, x = 'Date', y='total_cases', title=("New Daily Cases In Bibb County"))
-casesperdaybib3.show()
-
-#%% 14-day average for BibbCounty (other way to do that)
-
 totalcases = ChosenCounty['total_cases']
-new_totalcases = totalcases.rolling(window=14).sum()
-dates = ChosenCounty['Date']
-Bibb = pd.concat([dates, new_totalcases], axis = 1)
-Bibb.set_index('Date')
-BibbDate = Bibb['Date']
-BibbNewCase = Bibb['total_cases'].diff()
-Bibb = pd.concat([BibbDate, BibbNewCase], axis = 1)
-casesperdaybib = px.bar(Bibb, x = 'Date', y='total_cases', title=("New Daily Cases In Bibb County"))
-casesperdaybib.show()
-
-
-
-
-#%% 7-day average for 
-
-#%% 7-day average for the whole US
-
-totalcases = final_confirmed['total_cases']
-new_totalcases = totalcases.rolling(window=7).sum()
-dates = final_confirmed['Date']
-Bibb = pd.concat([dates, new_totalcases], axis = 1)
-Bibb.set_index('Date')
-BibbDate = Bibb['Date']
-BibbNewCase = Bibb['total_cases'].diff()
-Bibb = pd.concat([BibbDate, BibbNewCase], axis = 1)
-casesperdaybib = px.bar(Bibb, x = 'Date', y='total_cases', title=("New Daily Cases In Bibb County"))
-casesperdaybib.show()
-
-
-
-#%%
-totalcases = ChosenCounty['total_cases'].rolling(window=2).sum()
 dates = ChosenCounty['Date']
 Bibb = pd.concat([dates, totalcases], axis = 1)
 Bibb.set_index('Date')
 BibbDate = Bibb['Date']
 BibbNewCase = Bibb['total_cases'].diff()
-#BibbNewCase.rolling(window=7).sum()
 Bibb = pd.concat([BibbDate, BibbNewCase], axis = 1)
-casesperdaybib = px.bar(Bibb, x = 'Date', y='total_cases', title=("New Daily Cases In Bibb County"))
+casesperdaybib = px.bar(Bibb, x = 'Date', y='total_cases', title=("New Daily Cases In Bibb County with 7-day average"))
+
+
+totalcases2 = Bibb['total_cases']
+new_totalcases2 = totalcases2.rolling(window=7).mean()
+dates = Bibb['Date']
+Bibb2 = pd.concat([dates, new_totalcases2], axis = 1)
+casesperdaybib.add_traces(go.Scatter(x= Bibb2.Date, y=Bibb2.total_cases, mode = 'lines'))
 casesperdaybib.show()
-s = pd.Series(range(5))
-s.rolling(window=2).sum()
-#rolling on total cases with window=7 or 14 
+
+
+#%% 14-day average for BibbCounty (other way to do that)
+
+totalcases = ChosenCounty['total_cases']
+dates = ChosenCounty['Date']
+Bibb = pd.concat([dates, totalcases], axis = 1)
+Bibb.set_index('Date')
+BibbDate = Bibb['Date']
+BibbNewCase = Bibb['total_cases'].diff()
+Bibb = pd.concat([BibbDate, BibbNewCase], axis = 1)
+casesperdaybib = px.bar(Bibb, x = 'Date', y='total_cases', title=("New Daily Cases In Bibb County with 14-day average"))
+
+
+totalcases2 = Bibb['total_cases']
+new_totalcases2 = totalcases2.rolling(window=14).mean()
+dates = Bibb['Date']
+Bibb3 = pd.concat([dates, new_totalcases2], axis = 1)
+casesperdaybib.add_traces(go.Scatter(x= Bibb3.Date, y=Bibb3.total_cases, mode = 'lines'))
+casesperdaybib.show()
 
 
 
 
-#%% Tests
+#%% 7-day average for one state
 
-test = pd.DataFrame({'B':[0,1,2,3,4,7,3,9]})
-print(test)
-print(test.rolling(window=3).sum())
-print(test.rolling(window=3).mean())
+#%% 7-day average for the whole US
+
+
+
+
+
 
