@@ -185,7 +185,6 @@ cases_in_3_States = final_confirmed.loc[(final_confirmed["State"] == chosen_stat
 #%% Group by date
 cases_chosencounties_grpdate = cases_in_3_States.groupby(["Date","State"]).sum()
 cases_chosencounties_grpdate.reset_index(inplace=True)
-print(cases_chosencounties_grpdate)
 
 fig_cases_in_3_States = px.bar(cases_chosencounties_grpdate, x="State", y='total_cases', color = "State",title=("Total Covid cases in 3 states"))
 fig_cases_in_3_States.show()
@@ -223,92 +222,118 @@ Bibb.set_index('Date')
 BibbDate = Bibb['Date']
 BibbNewCase = Bibb['total_cases'].diff()
 Bibb = pd.concat([BibbDate, BibbNewCase], axis = 1)
-casesperdaybib = px.bar(Bibb, x = 'Date', y='total_cases', title=("New Daily Cases In Bibb County"))
+casesperdaybib = px.area(Bibb, x = 'Date', y='total_cases', title=("New Daily Cases In Bibb County"))
 casesperdaybib.show()
 
-
+#one state
 AL = final_confirmed.loc[(final_confirmed['State']== chosen_state)]
 ALCases = AL['total_cases']
 date = AL['Date']
 ALCase = pd.concat([date, ALCases], axis = 1)
 ALCase.set_index('Date')
-ALdate = ALCase['Date']
-ALNewCase = ALCase['total_cases'].diff()
-ALNewCases = pd.concat([ALdate, ALNewCase], axis = 1)
-ALNewCases1 = ALNewCases.groupby('Date').sum()
-dates.reset_index()
-ALNewCases1.reset_index()
-a = pd.concat([dates, ALNewCases1], axis = 1)
-a.set_index('Date')
-casesperdayAL = px.bar(a, x='Date', y='total_cases', title=("New Daily Cases In AL"))
+ALNewCases = ALCase.groupby('Date').sum()
+cpdAL = ALCase
+cpdAL = cpdAL.groupby('Date').sum()
+cpdAL = cpdAL['total_cases'].diff()
+cpdAL.reset_index()
+date.reset_index()
+a = pd.concat([date, cpdAL], axis= 1)
+casesperdayAL = px.area(cpdAL, x = dates, y='total_cases', title=("New Daily Cases In AL"))
 casesperdayAL.show()
+
+#the whole us
+USCase = pd.concat([final_confirmed['Date'],final_confirmed['total_cases']], axis =1)
+USCase = USCase.groupby('Date').sum()
+USCase = USCase['total_cases'].diff()
+casesperdayUS = px.area(USCase, x = dates, y='total_cases', title=("New Daily Cases in the US"))
+casesperdayUS.show()
+
+
 
 
 ### STAGE 4
 
 #%% 7-day average for BibbCounty
-totalcases3 = Bibb['total_cases']
-new_totalcases = totalcases3.rolling(window=7).sum() #or mean
-dates = ChosenCounty['Date']
-Bibb3 = pd.concat([dates, new_totalcases], axis = 1)
-casesperdaybib3 = px.bar(Bibb3, x = 'Date', y='total_cases', title=("New Daily Cases In Bibb County"))
-casesperdaybib3.show()
-
-#%% 14-day average for BibbCounty (other way to do that)
-
 totalcases = ChosenCounty['total_cases']
-new_totalcases = totalcases.rolling(window=14).sum()
-dates = ChosenCounty['Date']
-Bibb = pd.concat([dates, new_totalcases], axis = 1)
-Bibb.set_index('Date')
-BibbDate = Bibb['Date']
-BibbNewCase = Bibb['total_cases'].diff()
-Bibb = pd.concat([BibbDate, BibbNewCase], axis = 1)
-casesperdaybib = px.bar(Bibb, x = 'Date', y='total_cases', title=("New Daily Cases In Bibb County"))
-casesperdaybib.show()
-
-
-
-
-#%% 7-day average for 
-
-#%% 7-day average for the whole US
-
-totalcases = final_confirmed['total_cases']
-new_totalcases = totalcases.rolling(window=7).sum()
-dates = final_confirmed['Date']
-Bibb = pd.concat([dates, new_totalcases], axis = 1)
-Bibb.set_index('Date')
-BibbDate = Bibb['Date']
-BibbNewCase = Bibb['total_cases'].diff()
-Bibb = pd.concat([BibbDate, BibbNewCase], axis = 1)
-casesperdaybib = px.bar(Bibb, x = 'Date', y='total_cases', title=("New Daily Cases In Bibb County"))
-casesperdaybib.show()
-
-
-
-#%%
-totalcases = ChosenCounty['total_cases'].rolling(window=2).sum()
 dates = ChosenCounty['Date']
 Bibb = pd.concat([dates, totalcases], axis = 1)
 Bibb.set_index('Date')
 BibbDate = Bibb['Date']
 BibbNewCase = Bibb['total_cases'].diff()
-#BibbNewCase.rolling(window=7).sum()
 Bibb = pd.concat([BibbDate, BibbNewCase], axis = 1)
-casesperdaybib = px.bar(Bibb, x = 'Date', y='total_cases', title=("New Daily Cases In Bibb County"))
+casesperdaybib = px.bar(Bibb, x = 'Date', y='total_cases', title=("New Daily Cases In Bibb County with 7-day average"))
+
+
+totalcases2 = Bibb['total_cases']
+new_totalcases2 = totalcases2.rolling(window=7).mean()
+dates = Bibb['Date']
+Bibb2 = pd.concat([dates, new_totalcases2], axis = 1)
+casesperdaybib.add_traces(go.Scatter(x= Bibb2.Date, y=Bibb2.total_cases, mode = 'lines'))
 casesperdaybib.show()
-s = pd.Series(range(5))
-s.rolling(window=2).sum()
-#rolling on total cases with window=7 or 14 
+
+
+#%% 14-day average for BibbCounty (other way to do that)
+
+totalcases = ChosenCounty['total_cases']
+dates = ChosenCounty['Date']
+Bibb = pd.concat([dates, totalcases], axis = 1)
+Bibb.set_index('Date')
+BibbDate = Bibb['Date']
+BibbNewCase = Bibb['total_cases'].diff()
+Bibb = pd.concat([BibbDate, BibbNewCase], axis = 1)
+casesperdaybib = px.bar(Bibb, x = 'Date', y='total_cases', title=("New Daily Cases In Bibb County with 14-day average"))
+
+
+totalcases2 = Bibb['total_cases']
+new_totalcases2 = totalcases2.rolling(window=14).mean()
+dates = Bibb['Date']
+Bibb3 = pd.concat([dates, new_totalcases2], axis = 1)
+casesperdaybib.add_traces(go.Scatter(x= Bibb3.Date, y=Bibb3.total_cases, mode = 'lines'))
+casesperdaybib.show()
 
 
 
 
-#%% Tests
+#%% 7-day average for one state
 
-test = pd.DataFrame({'B':[0,1,2,3,4,7,3,9]})
-print(test)
-print(test.rolling(window=3).sum())
-print(test.rolling(window=3).mean())
+#%% 7-day average for the whole US
 
+
+### STAGE 5
+#%%
+pop_bibb_county = 22400
+copy_ChosenCounty = ChosenCounty.copy()
+copy_ChosenCounty.rename(columns={'total_cases':'total_cases_per_capita'},inplace=True)
+ttcases_percapita_bibb = (copy_ChosenCounty['total_cases_per_capita'].div(pop_bibb_county))*100000
+new_ChosenCounty = pd.concat([ChosenCounty,ttcases_percapita_bibb ], axis = 1)
+
+#%%
+state1 = cases_chosencounties_grpdate[cases_chosencounties_grpdate["State"]==chosen_state1]
+pop_ca = 39560000
+copy_state1 = state1.copy()
+copy_state1.rename(columns={'total_cases':'total_cases_per_capita'},inplace=True)
+ttcases_percapita_state1 = (copy_state1['total_cases_per_capita'].div(pop_ca))*100000
+new_state1 = pd.concat([state1,ttcases_percapita_state1 ], axis = 1)
+
+state2 = cases_chosencounties_grpdate[cases_chosencounties_grpdate["State"]==chosen_state2]
+pop_fl = 21570000
+copy_state2 = state2.copy()
+copy_state2.rename(columns={'total_cases':'total_cases_per_capita'},inplace=True)
+ttcases_percapita_state2 = (copy_state2['total_cases_per_capita'].div(pop_fl))*100000
+new_state2 = pd.concat([state2,ttcases_percapita_state2 ], axis = 1)
+
+state3 = cases_chosencounties_grpdate[cases_chosencounties_grpdate["State"]==chosen_state3]
+pop_il = 12740000
+copy_state3 = state3.copy()
+copy_state3.rename(columns={'total_cases':'total_cases_per_capita'},inplace=True)
+ttcases_percapita_state3 = (copy_state3['total_cases_per_capita'].div(pop_il))*100000
+new_state3 = pd.concat([state3,ttcases_percapita_state3 ], axis = 1)
+
+
+fig3 = make_subplots(rows=1, cols=3,shared_yaxes=True,subplot_titles=(chosen_state1, chosen_state2, chosen_state3))
+fig3.append_trace(go.Bar(x=new_state1["Date"],y=new_state1["total_cases_per_capita"]), row=1, col=1)
+fig3.append_trace(go.Bar(x=new_state2["Date"],y=new_state2["total_cases_per_capita"]), row=1, col=2)
+fig3.append_trace(go.Bar(x=new_state3["Date"],y=new_state3["total_cases_per_capita"]), row=1, col=3)
+fig3.update_layout(title_text="Evolution of total cases in "+chosen_state1+", "+chosen_state2+" and "+chosen_state3+" per capita")
+fig3.update_layout(showlegend=False)
+fig3.show()
