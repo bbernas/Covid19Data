@@ -200,6 +200,7 @@ fig.append_trace(go.Bar(x=state1["Date"],y=state1["total_cases"]), row=1, col=1)
 fig.append_trace(go.Bar(x=state2["Date"],y=state2["total_cases"]), row=2, col=1)
 fig.append_trace(go.Bar(x=state3["Date"],y=state3["total_cases"]), row=3, col=1)
 fig.update_layout(title_text="Evolution of total cases in "+chosen_state1+", "+chosen_state2+" and "+chosen_state3)
+fig.update_layout(showlegend=False)
 fig.show()
 
 #%% Same plot but with a shared y-axis
@@ -209,6 +210,7 @@ fig2.append_trace(go.Bar(x=state1["Date"],y=state1["total_cases"]), row=1, col=1
 fig2.append_trace(go.Bar(x=state2["Date"],y=state2["total_cases"]), row=1, col=2)
 fig2.append_trace(go.Bar(x=state3["Date"],y=state3["total_cases"]), row=1, col=3)
 fig2.update_layout(title_text="Evolution of total cases in "+chosen_state1+", "+chosen_state2+" and "+chosen_state3)
+fig2.update_layout(showlegend=False)
 fig2.show()
 
 
@@ -222,7 +224,7 @@ Bibb.set_index('Date')
 BibbDate = Bibb['Date']
 BibbNewCase = Bibb['total_cases'].diff()
 Bibb = pd.concat([BibbDate, BibbNewCase], axis = 1)
-casesperdaybib = px.area(Bibb, x = 'Date', y='total_cases', title=("New Daily Cases In Bibb County"))
+casesperdaybib = px.bar(Bibb, x = 'Date', y='total_cases', title=("New Daily Cases In Bibb County, AL"), labels=dict(total_cases = 'New Cases per Day'))
 casesperdaybib.show()
 
 #one state
@@ -238,16 +240,16 @@ cpdAL = cpdAL['total_cases'].diff()
 cpdAL.reset_index()
 date.reset_index()
 a = pd.concat([date, cpdAL], axis= 1)
-casesperdayAL = px.area(cpdAL, x = dates, y='total_cases', title=("New Daily Cases In AL"))
+casesperdayAL = px.bar(cpdAL, x = dates, y='total_cases', title=("New Daily Cases In AL"), labels=dict(x = "Date", total_cases = 'New Cases per Day'))
 casesperdayAL.show()
+
 
 #the whole us
 USCase = pd.concat([final_confirmed['Date'],final_confirmed['total_cases']], axis =1)
 USCase = USCase.groupby('Date').sum()
 USCase = USCase['total_cases'].diff()
-casesperdayUS = px.area(USCase, x = dates, y='total_cases', title=("New Daily Cases in the US"))
+casesperdayUS = px.bar(USCase, x = dates, y='total_cases', title=("New Daily Cases in the US"), labels=dict(x = "Date", total_cases = 'New Cases per Day'))
 casesperdayUS.show()
-
 
 
 
@@ -272,6 +274,31 @@ casesperdaybib.add_traces(go.Scatter(x= Bibb2.Date, y=Bibb2.total_cases, mode = 
 casesperdaybib.show()
 
 
+
+### STAGE 4
+
+#%% 7-day average for BibbCounty
+totalcases = ChosenCounty['total_cases']
+dates = ChosenCounty['Date']
+Bibb = pd.concat([dates, totalcases], axis = 1)
+Bibb.set_index('Date')
+BibbDate = Bibb['Date']
+BibbNewCase = Bibb['total_cases'].diff()
+Bibb = pd.concat([BibbDate, BibbNewCase], axis = 1)
+casesperdaybib = px.bar(Bibb, x = 'Date', y='total_cases', title=("New Daily Cases In Bibb County with 7-day average"))
+
+
+totalcases2 = Bibb['total_cases']
+new_totalcases2 = totalcases2.rolling(window=7).mean()
+dates = Bibb['Date']
+Bibb2 = pd.concat([dates, new_totalcases2], axis = 1)
+casesperdaybib.add_traces(go.Scatter(x= Bibb2.Date, y=Bibb2.total_cases, mode = 'lines'))
+casesperdaybib.show()
+
+#%% AL 7 day average
+
+
+
 #%% 14-day average for BibbCounty (other way to do that)
 
 totalcases = ChosenCounty['total_cases']
@@ -281,6 +308,16 @@ Bibb.set_index('Date')
 BibbDate = Bibb['Date']
 BibbNewCase = Bibb['total_cases'].diff()
 Bibb = pd.concat([BibbDate, BibbNewCase], axis = 1)
+casesperdaybib = px.bar(Bibb, x = 'Date', y='total_cases', title=("New Daily Cases In Bibb County with 14-day average"))
+
+
+totalcases2 = Bibb['total_cases']
+new_totalcases2 = totalcases2.rolling(window=14).mean()
+dates = Bibb['Date']
+Bibb3 = pd.concat([dates, new_totalcases2], axis = 1)
+casesperdaybib.add_traces(go.Scatter(x= Bibb3.Date, y=Bibb3.total_cases, mode = 'lines'))
+casesperdaybib.show()
+
 casesperdaybib = px.bar(Bibb, x = 'Date', y='total_cases', title=("New Daily Cases In Bibb County with 14-day average"))
 
 
@@ -329,7 +366,6 @@ copy_state3.rename(columns={'total_cases':'total_cases_per_capita'},inplace=True
 ttcases_percapita_state3 = (copy_state3['total_cases_per_capita'].div(pop_il))*100000
 new_state3 = pd.concat([state3,ttcases_percapita_state3 ], axis = 1)
 
-
 fig3 = make_subplots(rows=1, cols=3,shared_yaxes=True,subplot_titles=(chosen_state1, chosen_state2, chosen_state3))
 fig3.append_trace(go.Bar(x=new_state1["Date"],y=new_state1["total_cases_per_capita"]), row=1, col=1)
 fig3.append_trace(go.Bar(x=new_state2["Date"],y=new_state2["total_cases_per_capita"]), row=1, col=2)
@@ -337,3 +373,32 @@ fig3.append_trace(go.Bar(x=new_state3["Date"],y=new_state3["total_cases_per_capi
 fig3.update_layout(title_text="Evolution of total cases in "+chosen_state1+", "+chosen_state2+" and "+chosen_state3+" per capita")
 fig3.update_layout(showlegend=False)
 fig3.show()
+
+
+#%% Counties similar to Bibb county, population wise
+# Tippah County, MS- Pop: 22015 - FIPS: 28139
+# Scott County, TN - Pop: 22068 - FIPS: 47151
+# Logan County, CO - Pop: 22409 - FIPS: 8075
+# Franklin County, IN - Pop: 22758 - FIPS: 18047
+# Jersey County, IL, Pop: 21773 - FIPS: 17083
+
+#%% Stage 6
+from urllib.request import urlopen
+import json
+with urlopen('https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json') as response:
+    counties = json.load(response)
+    
+counties["features"][0]
+df1 = pd.concat([confirmed['countyFIPS'], confirmed['2022-02-15']], axis = 1)
+df1 = pd.concat([df1, confirmed['State']], axis = 1)
+fig = px.choropleth(df1, geojson=counties, locations='countyFIPS', color='2022-02-15',
+                           color_continuous_scale="geyser",
+                           range_color=(0, 750000),
+                           scope="usa",
+                           labels={'2021-02-15':'total cases'}
+                          )
+fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
+fig.show()
+
+
+
