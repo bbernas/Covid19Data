@@ -293,6 +293,46 @@ casesperdaybib.show()
 #%% 7-day average for the whole US
 
 
+### STAGE 5
+#%%
+pop_bibb_county = 22400
+copy_ChosenCounty = ChosenCounty.copy()
+copy_ChosenCounty.rename(columns={'total_cases':'total_cases_per_capita'},inplace=True)
+ttcases_percapita_bibb = (copy_ChosenCounty['total_cases_per_capita'].div(pop_bibb_county))*100000
+new_ChosenCounty = pd.concat([ChosenCounty,ttcases_percapita_bibb ], axis = 1)
+
+#%%
+state1 = cases_chosencounties_grpdate[cases_chosencounties_grpdate["State"]==chosen_state1]
+pop_ca = 39560000
+copy_state1 = state1.copy()
+copy_state1.rename(columns={'total_cases':'total_cases_per_capita'},inplace=True)
+ttcases_percapita_state1 = (copy_state1['total_cases_per_capita'].div(pop_ca))*100000
+new_state1 = pd.concat([state1,ttcases_percapita_state1 ], axis = 1)
+
+state2 = cases_chosencounties_grpdate[cases_chosencounties_grpdate["State"]==chosen_state2]
+pop_fl = 21570000
+copy_state2 = state2.copy()
+copy_state2.rename(columns={'total_cases':'total_cases_per_capita'},inplace=True)
+ttcases_percapita_state2 = (copy_state2['total_cases_per_capita'].div(pop_fl))*100000
+new_state2 = pd.concat([state2,ttcases_percapita_state2 ], axis = 1)
+
+state3 = cases_chosencounties_grpdate[cases_chosencounties_grpdate["State"]==chosen_state3]
+pop_il = 12740000
+copy_state3 = state3.copy()
+copy_state3.rename(columns={'total_cases':'total_cases_per_capita'},inplace=True)
+ttcases_percapita_state3 = (copy_state3['total_cases_per_capita'].div(pop_il))*100000
+new_state3 = pd.concat([state3,ttcases_percapita_state3 ], axis = 1)
+
+
+fig3 = make_subplots(rows=1, cols=3,shared_yaxes=True,subplot_titles=(chosen_state1, chosen_state2, chosen_state3))
+fig3.append_trace(go.Bar(x=new_state1["Date"],y=new_state1["total_cases_per_capita"]), row=1, col=1)
+fig3.append_trace(go.Bar(x=new_state2["Date"],y=new_state2["total_cases_per_capita"]), row=1, col=2)
+fig3.append_trace(go.Bar(x=new_state3["Date"],y=new_state3["total_cases_per_capita"]), row=1, col=3)
+fig3.update_layout(title_text="Evolution of total cases in "+chosen_state1+", "+chosen_state2+" and "+chosen_state3+" per capita")
+fig3.update_layout(showlegend=False)
+fig3.show()
+
+
 
 
 
