@@ -263,29 +263,7 @@ Bibb.set_index('Date')
 BibbDate = Bibb['Date']
 BibbNewCase = Bibb['total_cases'].diff()
 Bibb = pd.concat([BibbDate, BibbNewCase], axis = 1)
-casesperdaybib = px.bar(Bibb, x = 'Date', y='total_cases', title=("New Daily Cases In Bibb County with 7-day average"))
-
-
-totalcases2 = Bibb['total_cases']
-new_totalcases2 = totalcases2.rolling(window=7).mean()
-dates = Bibb['Date']
-Bibb2 = pd.concat([dates, new_totalcases2], axis = 1)
-casesperdaybib.add_traces(go.Scatter(x= Bibb2.Date, y=Bibb2.total_cases, mode = 'lines'))
-casesperdaybib.show()
-
-
-
-### STAGE 4
-
-#%% 7-day average for BibbCounty
-totalcases = ChosenCounty['total_cases']
-dates = ChosenCounty['Date']
-Bibb = pd.concat([dates, totalcases], axis = 1)
-Bibb.set_index('Date')
-BibbDate = Bibb['Date']
-BibbNewCase = Bibb['total_cases'].diff()
-Bibb = pd.concat([BibbDate, BibbNewCase], axis = 1)
-casesperdaybib = px.bar(Bibb, x = 'Date', y='total_cases', title=("New Daily Cases In Bibb County with 7-day average"))
+casesperdaybib = px.area(Bibb, x = 'Date', y='total_cases', title=("New Daily Cases In Bibb County with 7-day average"))
 
 
 totalcases2 = Bibb['total_cases']
@@ -305,7 +283,7 @@ Bibb.set_index('Date')
 BibbDate = Bibb['Date']
 BibbNewCase = Bibb['total_cases'].diff()
 Bibb = pd.concat([BibbDate, BibbNewCase], axis = 1)
-casesperdaybib = px.bar(Bibb, x = 'Date', y='total_cases', title=("New Daily Cases In Bibb County with 14-day average"))
+casesperdaybib = px.area(Bibb, x = 'Date', y='total_cases', title=("New Daily Cases In Bibb County with 14-day average"))
 
 
 totalcases2 = Bibb['total_cases']
@@ -329,8 +307,52 @@ casesperdaybib.show()
 
 
 #%% 7-day average for one state
+AL = final_confirmed.loc[(final_confirmed['State']== chosen_state)]
+ALCases = AL['total_cases']
+date = AL['Date']
+ALCase = pd.concat([date, ALCases], axis = 1)
+ALCase.set_index('Date')
+ALNewCases = ALCase.groupby('Date').sum()
+cpdAL = ALCase
+cpdAL = cpdAL.groupby('Date').sum()
+cpdAL = cpdAL['total_cases'].diff()
+cpdAL.reset_index()
+date.reset_index()
+a = pd.concat([date, cpdAL], axis= 1)
+casesperdayAL = px.area(cpdAL, x = dates, y='total_cases', title=("New Daily Cases In AL with 7-day average"))
+
+df = cpdAL.to_frame()
+df.reset_index(inplace=True)
+df = df.rename(columns = {'index':'Date'})
+
+AL2 = df['total_cases']
+new_AL2 = AL2.rolling(window=7).mean()
+dates = df['Date']
+cpdAL2 = pd.concat([dates, new_AL2], axis = 1)
+casesperdayAL.add_traces(go.Scatter(x= cpdAL2.Date, y=cpdAL2.total_cases, mode = 'lines'))
+casesperdayAL.show()
+
+
+
 
 #%% 7-day average for the whole US
+
+USCase = pd.concat([final_confirmed['Date'],final_confirmed['total_cases']], axis =1)
+USCase = USCase.groupby('Date').sum()
+USCase = USCase['total_cases'].diff()
+casesperdayUS = px.area(USCase, x = dates, y='total_cases', title=("New Daily Cases in the US"))
+
+dfUS = USCase.to_frame()
+dfUS.reset_index(inplace=True)
+dfUS = dfUS.rename(columns = {'index':'Date'})
+totalcasesUS = dfUS['total_cases']
+
+new_totalcasesUS = totalcasesUS.rolling(window=7).mean()
+dates = dfUS['Date']
+USnew = pd.concat([dates, new_totalcasesUS], axis = 1)
+casesperdayUS.add_traces(go.Scatter(x= USnew.Date, y=USnew.total_cases, mode = 'lines'))
+casesperdayUS.show()
+
 
 
 ### STAGE 5
@@ -371,3 +393,9 @@ fig3.append_trace(go.Bar(x=new_state3["Date"],y=new_state3["total_cases_per_capi
 fig3.update_layout(title_text="Evolution of total cases in "+chosen_state1+", "+chosen_state2+" and "+chosen_state3+" per capita")
 fig3.update_layout(showlegend=False)
 fig3.show()
+
+
+### STAGE 6
+
+#%%
+
