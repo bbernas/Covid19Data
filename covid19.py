@@ -356,6 +356,7 @@ USnew = pd.concat([dates, new_totalcasesUS], axis = 1)
 casesperdayUS.add_traces(go.Scatter(x= USnew.Date, y=USnew.total_cases, mode = 'lines'))
 casesperdayUS.show()
 
+#day with the most cases : 2022-01-10
 
 
 ### STAGE 5
@@ -368,21 +369,21 @@ new_ChosenCounty = pd.concat([ChosenCounty,ttcases_percapita_bibb ], axis = 1)
 
 #%%
 state1 = cases_chosencounties_grpdate[cases_chosencounties_grpdate["State"]==chosen_state1]
-pop_ca = 39560000
+pop_ca = 39538223
 copy_state1 = state1.copy()
 copy_state1.rename(columns={'total_cases':'total_cases_per_capita'},inplace=True)
 ttcases_percapita_state1 = (copy_state1['total_cases_per_capita'].div(pop_ca))*100000
 new_state1 = pd.concat([state1,ttcases_percapita_state1 ], axis = 1)
 
 state2 = cases_chosencounties_grpdate[cases_chosencounties_grpdate["State"]==chosen_state2]
-pop_fl = 21570000
+pop_fl = 21538187
 copy_state2 = state2.copy()
 copy_state2.rename(columns={'total_cases':'total_cases_per_capita'},inplace=True)
 ttcases_percapita_state2 = (copy_state2['total_cases_per_capita'].div(pop_fl))*100000
 new_state2 = pd.concat([state2,ttcases_percapita_state2 ], axis = 1)
 
 state3 = cases_chosencounties_grpdate[cases_chosencounties_grpdate["State"]==chosen_state3]
-pop_il = 12740000
+pop_il = 12812508
 copy_state3 = state3.copy()
 copy_state3.rename(columns={'total_cases':'total_cases_per_capita'},inplace=True)
 ttcases_percapita_state3 = (copy_state3['total_cases_per_capita'].div(pop_il))*100000
@@ -423,5 +424,88 @@ fig = px.choropleth(df1, geojson=counties, locations='countyFIPS', color='2022-0
 fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
 fig.show()
 
+#%%
+df2 = final_confirmed[final_confirmed['Date']=='2022-01-10']
+cases_in_several_States = df2.loc[(df2["State"] == "CA") | (df2['State']=="FL") | (df2['State']=="IL")| (df2['State']=="TX") | (df2['State']=="NY") | (df2['State']=="PA") | (df2['State']=="OH") | (df2['State']=="GA") ]
 
+
+#%% Group by date
+cases_chosenstates_grpdate = cases_in_several_States.groupby(["Date","State"]).sum()
+cases_chosenstates_grpdate.reset_index(inplace=True)
+
+
+#%% adjust states per 100,000 inhabitants
+ca = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='CA']
+pop_ca = 39538223
+copy_ca = ca.copy()
+ttcases_ca_df = copy_ca['total_cases']
+tt_cases_ca_num = ttcases_ca_df.iloc[0]
+ttcases_per100000_ca = (tt_cases_ca_num/(pop_ca))*100000
+
+fl = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='FL']
+pop_fl = 21538187
+copy_fl = fl.copy()
+ttcases_fl_df = copy_fl['total_cases']
+tt_cases_fl_num = ttcases_fl_df.iloc[0]
+ttcases_per100000_fl = (tt_cases_fl_num/(pop_fl))*100000
+
+ga = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='GA']
+pop_ga = 10711908
+copy_ga = ga.copy()
+ttcases_ga_df = copy_ga['total_cases']
+tt_cases_ga_num = ttcases_ga_df.iloc[0]
+ttcases_per100000_ga = (tt_cases_ga_num/(pop_ga))*100000
+
+il = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='IL']
+pop_il = 12812508
+copy_il = il.copy()
+ttcases_il_df = copy_il['total_cases']
+tt_cases_il_num = ttcases_il_df.iloc[0]
+ttcases_per100000_il = (tt_cases_il_num/(pop_il))*100000
+
+ny = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='NY']
+pop_ny = 20201249
+copy_ny = ny.copy()
+ttcases_ny_df = copy_ny['total_cases']
+tt_cases_ny_num = ttcases_ny_df.iloc[0]
+ttcases_per100000_ny = (tt_cases_ny_num/(pop_ny))*100000
+
+oh = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='OH']
+pop_oh = 11799448
+copy_oh = oh.copy()
+ttcases_oh_df = copy_oh['total_cases']
+tt_cases_oh_num = ttcases_oh_df.iloc[0]
+ttcases_per100000_oh = (tt_cases_oh_num/(pop_oh))*100000
+
+pa = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='PA']
+pop_pa = 13002700
+copy_pa = pa.copy()
+ttcases_pa_df = copy_pa['total_cases']
+tt_cases_pa_num = ttcases_pa_df.iloc[0]
+ttcases_per100000_pa = (tt_cases_pa_num/(pop_pa))*100000
+
+tx = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='TX']
+pop_tx = 29145505
+copy_tx = tx.copy()
+ttcases_tx_df = copy_tx['total_cases']
+tt_cases_tx_num = ttcases_tx_df.iloc[0]
+ttcases_per100000_tx = (tt_cases_tx_num/(pop_tx))*100000
+
+#%% add cases per 100000 to cases_chosen_states_grpdate
+cases_chosenstates_grpdate['total_cases_per_100000'] = [ttcases_per100000_ca,ttcases_per100000_fl,ttcases_per100000_ga,ttcases_per100000_il,ttcases_per100000_ny,ttcases_per100000_oh,ttcases_per100000_pa,ttcases_per100000_tx]
+
+#%%
+with urlopen('https://raw.githubusercontent.com/plotly/datasets/master/geojson-states-fips.json') as response:
+    states = json.load(response)
+    
+states["features"][0]
+df1 = pd.concat([cases_chosenstates_grpdate['State'], confirmed['2022-01-10']], axis = 1)
+fig = px.choropleth(df1, geojson=states, locations='State', color='2022-01-10',
+                           color_continuous_scale="geyser",
+                           range_color=(0, 750000),
+                           scope="usa",
+                           labels={'2021-01-10':'total cases'}
+                          )
+fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
+fig.show()
 
