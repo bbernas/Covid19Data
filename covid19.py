@@ -389,13 +389,14 @@ with urlopen('https://raw.githubusercontent.com/plotly/datasets/master/geojson-c
     counties = json.load(response)
     
 counties["features"][0]
-df1 = pd.concat([confirmed['countyFIPS'], confirmed['2022-02-15']], axis = 1)
+countyF =  confirmed['countyFIPS'].map(str)
+df1 = pd.concat([countyF, confirmed['2022-02-15']], axis = 1)
 df1 = pd.concat([df1, confirmed['State']], axis = 1)
 fig = px.choropleth(df1, geojson=counties, locations='countyFIPS', color='2022-02-15',
-                           color_continuous_scale="geyser",
-                           range_color=(0, 750000),
+                           color_continuous_scale="plasma",
+                           range_color=(0, 1250000),
                            scope="usa",
-                           labels={'2021-02-15':'total cases'}
+                           labels={'2022-02-15':'total cases'}
                           )
 fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
 fig.show()
