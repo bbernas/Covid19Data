@@ -418,13 +418,13 @@ confirmedcopy = fixedstr.str.zfill(5)
 df1 = pd.concat([confirmedcopy, confirmed['2022-02-15']], axis = 1)
 df1 = pd.concat([df1, confirmed['State']], axis = 1)
 fig = px.choropleth(df1, geojson=counties, locations='countyFIPS', color='2022-02-15',
-                           color_continuous_scale="blues",
+                           color_continuous_scale="picnic",
                            title = "Covid 19 Cases per County on Feb 15th, 2022",
                            range_color=(0, 100000),
-                           scope="usa", 
+                           scope="usa",
                            labels={'2022-02-15':'total cases'}
                           )
-fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
+fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0}, title_font_size = 42, title_y = .9)
 fig.show()
 
 #%%
