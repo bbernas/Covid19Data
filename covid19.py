@@ -426,7 +426,7 @@ fig.show()
 
 #%%
 df2 = final_confirmed[final_confirmed['Date']=='2022-01-10']
-cases_in_several_States = df2.loc[(df2["State"] == "CA") | (df2['State']=="FL") | (df2['State']=="IL")| (df2['State']=="TX") | (df2['State']=="NY") | (df2['State']=="PA") | (df2['State']=="OH") | (df2['State']=="GA") ]
+cases_in_several_States = df2.loc[(df2['State']=="AL") |(df2['State']=="AK") |(df2['State']=="AZ") |(df2['State']=="AR") |(df2["State"] == "CA") |(df2['State']=="CO") |(df2['State']=="CT") |(df2['State']=="DE") |(df2['State']=="DC") | (df2['State']=="FL") | (df2['State']=="GA") |(df2['State']=="HI") |(df2['State']=="ID") |(df2['State']=="IL")|(df2['State']=="IN")| (df2['State']=="IA")|(df2['State']=="KS")|(df2['State']=="KY")|(df2['State']=="LA")|(df2['State']=="ME")|(df2['State']=="MD")|(df2['State']=="MA")|(df2['State']=="MI")|(df2['State']=="MN")|(df2['State']=="MS")|(df2['State']=="MO")|(df2['State']=="MT")|(df2['State']=="NE")|(df2['State']=="NV")|(df2['State']=="NH")|(df2['State']=="NJ")|(df2['State']=="NM")|(df2['State']=="NY")| (df2['State']=="NC")|(df2['State']=="ND")| (df2['State']=="OH")|(df2['State']=="OK")|(df2['State']=="OR")| (df2['State']=="PA")|(df2['State']=="RI")|(df2['State']=="SC")|(df2['State']=="SD")|(df2['State']=="TN")|(df2['State']=="TX") |(df2['State']=="UT")  |(df2['State']=="VT") |(df2['State']=="VA") |(df2['State']=="WA") |(df2['State']=="WV") |(df2['State']=="WI") |(df2['State']=="WY")]
 
 
 #%% Group by date
@@ -435,12 +435,68 @@ cases_chosenstates_grpdate.reset_index(inplace=True)
 
 
 #%% adjust states per 100,000 inhabitants
+al = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='AL']
+pop_al = 5024279
+copy_al = al.copy()
+ttcases_al_df = copy_al['total_cases']
+tt_cases_al_num = ttcases_al_df.iloc[0]
+ttcases_per100000_al = (tt_cases_al_num/(pop_al))*100000
+
+ak = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='AK']
+pop_ak = 733391
+copy_ak = ak.copy()
+ttcases_ak_df = copy_ak['total_cases']
+tt_cases_ak_num = ttcases_ak_df.iloc[0]
+ttcases_per100000_ak = (tt_cases_ak_num/(pop_ak))*100000
+
+az = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='AZ']
+pop_az = 7151502
+copy_az = az.copy()
+ttcases_az_df = copy_az['total_cases']
+tt_cases_az_num = ttcases_az_df.iloc[0]
+ttcases_per100000_az = (tt_cases_az_num/(pop_az))*100000
+
+ar = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='AR']
+pop_ar = 3011524
+copy_ar = ar.copy()
+ttcases_ar_df = copy_ar['total_cases']
+tt_cases_ar_num = ttcases_ar_df.iloc[0]
+ttcases_per100000_ar = (tt_cases_ar_num/(pop_ar))*100000
+
 ca = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='CA']
 pop_ca = 39538223
 copy_ca = ca.copy()
 ttcases_ca_df = copy_ca['total_cases']
 tt_cases_ca_num = ttcases_ca_df.iloc[0]
 ttcases_per100000_ca = (tt_cases_ca_num/(pop_ca))*100000
+
+co = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='CO']
+pop_co = 5773714
+copy_co = co.copy()
+ttcases_co_df = copy_co['total_cases']
+tt_cases_co_num = ttcases_co_df.iloc[0]
+ttcases_per100000_co = (tt_cases_co_num/(pop_co))*100000
+
+ct = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='CT']
+pop_ct = 3605944
+copy_ct = ct.copy()
+ttcases_ct_df = copy_ct['total_cases']
+tt_cases_ct_num = ttcases_ct_df.iloc[0]
+ttcases_per100000_ct = (tt_cases_ct_num/(pop_ct))*100000
+
+de = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='DE']
+pop_de = 989948
+copy_de = de.copy()
+ttcases_de_df = copy_de['total_cases']
+tt_cases_de_num = ttcases_de_df.iloc[0]
+ttcases_per100000_de = (tt_cases_de_num/(pop_de))*100000
+
+dc = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='DC']
+pop_dc = 689545
+copy_dc = dc.copy()
+ttcases_dc_df = copy_dc['total_cases']
+tt_cases_dc_num = ttcases_dc_df.iloc[0]
+ttcases_per100000_dc = (tt_cases_dc_num/(pop_dc))*100000
 
 fl = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='FL']
 pop_fl = 21538187
@@ -456,12 +512,152 @@ ttcases_ga_df = copy_ga['total_cases']
 tt_cases_ga_num = ttcases_ga_df.iloc[0]
 ttcases_per100000_ga = (tt_cases_ga_num/(pop_ga))*100000
 
+hi = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='HI']
+pop_hi = 1455271
+copy_hi = hi.copy()
+ttcases_hi_df = copy_hi['total_cases']
+tt_cases_hi_num = ttcases_hi_df.iloc[0]
+ttcases_per100000_hi = (tt_cases_hi_num/(pop_hi))*100000
+
+id_ = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='ID']
+pop_id = 1839106	
+copy_id = id_.copy()
+ttcases_id_df = copy_id['total_cases']
+tt_cases_id_num = ttcases_id_df.iloc[0]
+ttcases_per100000_id = (tt_cases_id_num/(pop_id))*100000
+
 il = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='IL']
 pop_il = 12812508
 copy_il = il.copy()
 ttcases_il_df = copy_il['total_cases']
 tt_cases_il_num = ttcases_il_df.iloc[0]
 ttcases_per100000_il = (tt_cases_il_num/(pop_il))*100000
+
+in_ = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='IN']
+pop_in = 6785528
+copy_in = in_.copy()
+ttcases_in_df = copy_in['total_cases']
+tt_cases_in_num = ttcases_in_df.iloc[0]
+ttcases_per100000_in = (tt_cases_in_num/(pop_in))*100000
+
+ia = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='IA']
+pop_ia = 3190369
+copy_ia = ia.copy()
+ttcases_ia_df = copy_ia['total_cases']
+tt_cases_ia_num = ttcases_ia_df.iloc[0]
+ttcases_per100000_ia = (tt_cases_ia_num/(pop_ia))*100000
+
+ks = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='KS']
+pop_ks = 2937880
+copy_ks = ks.copy()
+ttcases_ks_df = copy_ks['total_cases']
+tt_cases_ks_num = ttcases_ks_df.iloc[0]
+ttcases_per100000_ks = (tt_cases_ks_num/(pop_ks))*100000
+
+ky = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='KY']
+pop_ky = 4505836
+copy_ky = ky.copy()
+ttcases_ky_df = copy_ky['total_cases']
+tt_cases_ky_num = ttcases_ky_df.iloc[0]
+ttcases_per100000_ky = (tt_cases_ky_num/(pop_ky))*100000
+
+la = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='LA']
+pop_la = 4657757
+copy_la = la.copy()
+ttcases_la_df = copy_la['total_cases']
+tt_cases_la_num = ttcases_la_df.iloc[0]
+ttcases_per100000_la = (tt_cases_la_num/(pop_la))*100000
+
+me = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='ME']
+pop_me = 1362359
+copy_me = me.copy()
+ttcases_me_df = copy_me['total_cases']
+tt_cases_me_num = ttcases_me_df.iloc[0]
+ttcases_per100000_me = (tt_cases_me_num/(pop_me))*100000
+
+md = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='MD']
+pop_md = 6177224
+copy_md = md.copy()
+ttcases_md_df = copy_md['total_cases']
+tt_cases_md_num = ttcases_md_df.iloc[0]
+ttcases_per100000_md = (tt_cases_md_num/(pop_md))*100000
+
+ma = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='MA']
+pop_ma = 7029917
+copy_ma = ma.copy()
+ttcases_ma_df = copy_ma['total_cases']
+tt_cases_ma_num = ttcases_ma_df.iloc[0]
+ttcases_per100000_ma = (tt_cases_ma_num/(pop_ma))*100000
+
+mi = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='MI']
+pop_mi = 10077331
+copy_mi = mi.copy()
+ttcases_mi_df = copy_mi['total_cases']
+tt_cases_mi_num = ttcases_mi_df.iloc[0]
+ttcases_per100000_mi = (tt_cases_mi_num/(pop_mi))*100000
+
+mn = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='MN']
+pop_mn = 5706494
+copy_mn = mn.copy()
+ttcases_mn_df = copy_mn['total_cases']
+tt_cases_mn_num = ttcases_mn_df.iloc[0]
+ttcases_per100000_mn = (tt_cases_mn_num/(pop_mn))*100000
+
+ms = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='MS']
+pop_ms = 2961279
+copy_ms = ms.copy()
+ttcases_ms_df = copy_ms['total_cases']
+tt_cases_ms_num = ttcases_ms_df.iloc[0]
+ttcases_per100000_ms = (tt_cases_ms_num/(pop_ms))*100000
+
+mo = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='MO']
+pop_mo = 6154913
+copy_mo = mo.copy()
+ttcases_mo_df = copy_mo['total_cases']
+tt_cases_mo_num = ttcases_mo_df.iloc[0]
+ttcases_per100000_mo = (tt_cases_mo_num/(pop_mo))*100000
+
+mt = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='MT']
+pop_mt = 1084225
+copy_mt = mt.copy()
+ttcases_mt_df = copy_mt['total_cases']
+tt_cases_mt_num = ttcases_mt_df.iloc[0]
+ttcases_per100000_mt = (tt_cases_mt_num/(pop_mt))*100000
+
+ne = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='NE']
+pop_ne = 1961504
+copy_ne = ne.copy()
+ttcases_ne_df = copy_ne['total_cases']
+tt_cases_ne_num = ttcases_ne_df.iloc[0]
+ttcases_per100000_ne = (tt_cases_ne_num/(pop_ne))*100000
+
+nv = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='NV']
+pop_nv = 3104614
+copy_nv = nv.copy()
+ttcases_nv_df = copy_nv['total_cases']
+tt_cases_nv_num = ttcases_nv_df.iloc[0]
+ttcases_per100000_nv = (tt_cases_nv_num/(pop_nv))*100000
+
+nh = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='NH']
+pop_nh = 1377529
+copy_nh = nh.copy()
+ttcases_nh_df = copy_nh['total_cases']
+tt_cases_nh_num = ttcases_nh_df.iloc[0]
+ttcases_per100000_nh = (tt_cases_nh_num/(pop_nh))*100000
+
+nj = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='NJ']
+pop_nj = 9288994
+copy_nj = nj.copy()
+ttcases_nj_df = copy_nj['total_cases']
+tt_cases_nj_num = ttcases_nj_df.iloc[0]
+ttcases_per100000_nj = (tt_cases_nj_num/(pop_nj))*100000
+
+nm = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='NM']
+pop_nm = 2117522
+copy_nm = nm.copy()
+ttcases_nm_df = copy_nm['total_cases']
+tt_cases_nm_num = ttcases_nm_df.iloc[0]
+ttcases_per100000_nm = (tt_cases_nm_num/(pop_nm))*100000
 
 ny = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='NY']
 pop_ny = 20201249
@@ -470,12 +666,40 @@ ttcases_ny_df = copy_ny['total_cases']
 tt_cases_ny_num = ttcases_ny_df.iloc[0]
 ttcases_per100000_ny = (tt_cases_ny_num/(pop_ny))*100000
 
+nc = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='NC']
+pop_nc = 10439388
+copy_nc = nc.copy()
+ttcases_nc_df = copy_nc['total_cases']
+tt_cases_nc_num = ttcases_nc_df.iloc[0]
+ttcases_per100000_nc = (tt_cases_nc_num/(pop_nc))*100000
+
+nd = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='ND']
+pop_nd = 779094
+copy_nd = nd.copy()
+ttcases_nd_df = copy_nd['total_cases']
+tt_cases_nd_num = ttcases_nd_df.iloc[0]
+ttcases_per100000_nd = (tt_cases_nd_num/(pop_nd))*100000
+
 oh = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='OH']
 pop_oh = 11799448
 copy_oh = oh.copy()
 ttcases_oh_df = copy_oh['total_cases']
 tt_cases_oh_num = ttcases_oh_df.iloc[0]
 ttcases_per100000_oh = (tt_cases_oh_num/(pop_oh))*100000
+
+ok = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='OK']
+pop_ok = 3959353
+copy_ok = ok.copy()
+ttcases_ok_df = copy_ok['total_cases']
+tt_cases_ok_num = ttcases_ok_df.iloc[0]
+ttcases_per100000_ok = (tt_cases_ok_num/(pop_ok))*100000
+
+or_ = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='OR']
+pop_or = 4237256
+copy_or = or_.copy()
+ttcases_or_df = copy_or['total_cases']
+tt_cases_or_num = ttcases_or_df.iloc[0]
+ttcases_per100000_or = (tt_cases_or_num/(pop_or))*100000
 
 pa = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='PA']
 pop_pa = 13002700
@@ -484,6 +708,34 @@ ttcases_pa_df = copy_pa['total_cases']
 tt_cases_pa_num = ttcases_pa_df.iloc[0]
 ttcases_per100000_pa = (tt_cases_pa_num/(pop_pa))*100000
 
+ri = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='RI']
+pop_ri = 1097379
+copy_ri = ri.copy()
+ttcases_ri_df = copy_ri['total_cases']
+tt_cases_ri_num = ttcases_ri_df.iloc[0]
+ttcases_per100000_ri = (tt_cases_ri_num/(pop_ri))*100000
+
+sc = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='SC']
+pop_sc = 5118425
+copy_sc = sc.copy()
+ttcases_sc_df = copy_sc['total_cases']
+tt_cases_sc_num = ttcases_sc_df.iloc[0]
+ttcases_per100000_sc = (tt_cases_sc_num/(pop_sc))*100000
+
+sd = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='SD']
+pop_sd = 886667
+copy_sd = sd.copy()
+ttcases_sd_df = copy_sd['total_cases']
+tt_cases_sd_num = ttcases_sd_df.iloc[0]
+ttcases_per100000_sd = (tt_cases_sd_num/(pop_sd))*100000
+
+tn = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='TN']
+pop_tn = 6910840
+copy_tn = tn.copy()
+ttcases_tn_df = copy_tn['total_cases']
+tt_cases_tn_num = ttcases_tn_df.iloc[0]
+ttcases_per100000_tn = (tt_cases_tn_num/(pop_tn))*100000
+
 tx = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='TX']
 pop_tx = 29145505
 copy_tx = tx.copy()
@@ -491,20 +743,69 @@ ttcases_tx_df = copy_tx['total_cases']
 tt_cases_tx_num = ttcases_tx_df.iloc[0]
 ttcases_per100000_tx = (tt_cases_tx_num/(pop_tx))*100000
 
+ut = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='UT']
+pop_ut = 3271616
+copy_ut = ut.copy()
+ttcases_ut_df = copy_ut['total_cases']
+tt_cases_ut_num = ttcases_ut_df.iloc[0]
+ttcases_per100000_ut = (tt_cases_ut_num/(pop_ut))*100000
+
+vt = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='VT']
+pop_vt = 643077
+copy_vt = vt.copy()
+ttcases_vt_df = copy_vt['total_cases']
+tt_cases_vt_num = ttcases_vt_df.iloc[0]
+ttcases_per100000_vt = (tt_cases_vt_num/(pop_vt))*100000
+
+va = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='VA']
+pop_va = 8631393
+copy_va = va.copy()
+ttcases_va_df = copy_va['total_cases']
+tt_cases_va_num = ttcases_va_df.iloc[0]
+ttcases_per100000_va = (tt_cases_va_num/(pop_va))*100000
+
+wa = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='WA']
+pop_wa = 7705281
+copy_wa = wa.copy()
+ttcases_wa_df = copy_wa['total_cases']
+tt_cases_wa_num = ttcases_wa_df.iloc[0]
+ttcases_per100000_wa = (tt_cases_wa_num/(pop_wa))*100000
+
+wv = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='WV']
+pop_wv = 1793716
+copy_wv = wv.copy()
+ttcases_wv_df = copy_wv['total_cases']
+tt_cases_wv_num = ttcases_wv_df.iloc[0]
+ttcases_per100000_wv = (tt_cases_wv_num/(pop_wv))*100000
+
+wi = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='WI']
+pop_wi = 5893718
+copy_wi = wi.copy()
+ttcases_wi_df = copy_wi['total_cases']
+tt_cases_wi_num = ttcases_wi_df.iloc[0]
+ttcases_per100000_wi = (tt_cases_wi_num/(pop_wi))*100000
+
+wy = cases_chosenstates_grpdate[cases_chosenstates_grpdate["State"]=='WY']
+pop_wy = 576851
+copy_wy = wy.copy()
+ttcases_wy_df = copy_wy['total_cases']
+tt_cases_wy_num = ttcases_wy_df.iloc[0]
+ttcases_per100000_wy = (tt_cases_wy_num/(pop_wy))*100000
+
 #%% add cases per 100000 to cases_chosen_states_grpdate
-cases_chosenstates_grpdate['total_cases_per_100000'] = [ttcases_per100000_ca,ttcases_per100000_fl,ttcases_per100000_ga,ttcases_per100000_il,ttcases_per100000_ny,ttcases_per100000_oh,ttcases_per100000_pa,ttcases_per100000_tx]
+cases_chosenstates_grpdate['total_cases_per_100000'] = [ttcases_per100000_al,ttcases_per100000_ak,ttcases_per100000_az,ttcases_per100000_ar,ttcases_per100000_ca,ttcases_per100000_co,ttcases_per100000_ct,ttcases_per100000_de,ttcases_per100000_dc,ttcases_per100000_fl,ttcases_per100000_ga,ttcases_per100000_hi,ttcases_per100000_id,ttcases_per100000_il,ttcases_per100000_in,ttcases_per100000_ia,ttcases_per100000_ks,ttcases_per100000_ky,ttcases_per100000_la,ttcases_per100000_me,ttcases_per100000_md,ttcases_per100000_ma,ttcases_per100000_mi,ttcases_per100000_mn,ttcases_per100000_ms,ttcases_per100000_mo,ttcases_per100000_mt,ttcases_per100000_ne,ttcases_per100000_nv,ttcases_per100000_nh,ttcases_per100000_nj,ttcases_per100000_nm,ttcases_per100000_ny,ttcases_per100000_nc,ttcases_per100000_nd,ttcases_per100000_oh,ttcases_per100000_ok,ttcases_per100000_or,ttcases_per100000_pa,ttcases_per100000_ri,ttcases_per100000_sc,ttcases_per100000_sd,ttcases_per100000_tn,ttcases_per100000_tx,ttcases_per100000_ut,ttcases_per100000_vt,ttcases_per100000_va,ttcases_per100000_wa,ttcases_per100000_wv,ttcases_per100000_wi,ttcases_per100000_wy]
 
 #%%
-with urlopen('https://raw.githubusercontent.com/plotly/datasets/master/geojson-states-fips.json') as response:
-    states = json.load(response)
+with urlopen('https://gist.githubusercontent.com/mheydt/29eec003a4c0af362d7a/raw/d27d143bd75626647108fc514d8697e0814bf74b/us-states.json') as response2:
+    states = json.load(response2)
     
 states["features"][0]
-df1 = pd.concat([cases_chosenstates_grpdate['State'], confirmed['2022-01-10']], axis = 1)
-fig = px.choropleth(df1, geojson=states, locations='State', color='2022-01-10',
+df1 = pd.concat([cases_chosenstates_grpdate['State'], cases_chosenstates_grpdate['total_cases_per_100000']], axis = 1) 
+fig = px.choropleth(df1, geojson=states, locations='State', locationmode="USA-states", color='total_cases_per_100000',
                            color_continuous_scale="geyser",
-                           range_color=(0, 750000),
+                           range_color=(0, 30000),
                            scope="usa",
-                           labels={'2021-01-10':'total cases'}
+                           labels={'total_cases_per_100000':'total cases per 100000'}
                           )
 fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
 fig.show()
