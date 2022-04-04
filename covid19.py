@@ -813,3 +813,101 @@ fig = px.choropleth(df1, geojson=states, locations='State', locationmode="USA-st
 fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
 fig.show()
 
+
+#%% Stage 6 question 2
+calif = cases_in_3_States[cases_in_3_States["State"]=="CA"]
+copy_calif = calif.copy()
+copy_calif.rename(columns={'total_cases':'total_cases_per_100000'},inplace=True)
+ttcases_per100000_calif = (copy_calif['total_cases_per_100000'].div(pop_ca))*100000
+new_calif = pd.concat([calif,ttcases_per100000_calif ], axis = 1)
+
+flor = cases_in_3_States[cases_in_3_States["State"]=="FL"]
+copy_flor = flor.copy()
+copy_flor.rename(columns={'total_cases':'total_cases_per_100000'},inplace=True)
+ttcases_per100000_flor = (copy_flor['total_cases_per_100000'].div(pop_fl))*100000
+new_flor = pd.concat([flor,ttcases_per100000_flor ], axis = 1)
+
+illi = cases_in_3_States[cases_in_3_States["State"]=="IL"]
+copy_illi = illi.copy()
+copy_illi.rename(columns={'total_cases':'total_cases_per_100000'},inplace=True)
+ttcases_per100000_illi = (copy_illi['total_cases_per_100000'].div(pop_il))*100000
+new_illi = pd.concat([illi,ttcases_per100000_illi ], axis = 1)
+
+data = [new_calif, new_flor,new_illi]
+new_chosenstates = pd.concat(data)
+
+new_chosenstates = new_chosenstates.groupby(['State', pd.Grouper(key='Date', freq='W-MON')])['total_cases_per_100000'].sum()
+new_chosenstates=new_chosenstates.to_frame()
+new_chosenstates.sort_values('Date')
+new_chosenstates.reset_index(inplace=True)
+
+#%% choose 4-week period : from 2022-01-03 to 2022-01-24
+from_ = '2022-01-03'
+to_ = '2022-01-24'
+four_week_period = new_chosenstates[(new_chosenstates['Date']>=from_) & (new_chosenstates['Date']<=to_)]
+
+#%% choropleth for 2022-01-03 week
+with urlopen('https://gist.githubusercontent.com/mheydt/29eec003a4c0af362d7a/raw/d27d143bd75626647108fc514d8697e0814bf74b/us-states.json') as response2:
+    states = json.load(response2)
+    
+states["features"][0]
+df2 = pd.concat([four_week_period['State'][four_week_period['Date']=='2022-01-03'], four_week_period['total_cases_per_100000'][four_week_period['Date']=='2022-01-03']], axis = 1) 
+fig = px.choropleth(df2, geojson=states, locations='State', locationmode="USA-states", color='total_cases_per_100000',
+                           color_continuous_scale="geyser",
+                           title = "New cases choropleth for 2022-01-03 week in 3 states",
+                           range_color=(0, 180000),
+                           scope="usa",
+                           labels={'total_cases_per_100000':'total cases per 100000'}
+                          )
+fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0}, title_font_size = 36, title_y = .95)
+fig.show()
+
+#%% choropleth for 2022-01-10 week
+with urlopen('https://gist.githubusercontent.com/mheydt/29eec003a4c0af362d7a/raw/d27d143bd75626647108fc514d8697e0814bf74b/us-states.json') as response2:
+    states = json.load(response2)
+    
+states["features"][0]
+df2 = pd.concat([four_week_period['State'][four_week_period['Date']=='2022-01-10'], four_week_period['total_cases_per_100000'][four_week_period['Date']=='2022-01-10']], axis = 1) 
+fig = px.choropleth(df2, geojson=states, locations='State', locationmode="USA-states", color='total_cases_per_100000',
+                           color_continuous_scale="geyser",
+                           title = "New cases choropleth for 2022-01-10 week in 3 states",
+                           range_color=(0, 180000),
+                           scope="usa",
+                           labels={'total_cases_per_100000':'total cases per 100000'}
+                          )
+fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0}, title_font_size = 36, title_y = .95)
+fig.show()
+
+#%% choropleth for 2022-01-17 week
+with urlopen('https://gist.githubusercontent.com/mheydt/29eec003a4c0af362d7a/raw/d27d143bd75626647108fc514d8697e0814bf74b/us-states.json') as response2:
+    states = json.load(response2)
+    
+states["features"][0]
+df2 = pd.concat([four_week_period['State'][four_week_period['Date']=='2022-01-17'], four_week_period['total_cases_per_100000'][four_week_period['Date']=='2022-01-17']], axis = 1) 
+fig = px.choropleth(df2, geojson=states, locations='State', locationmode="USA-states", color='total_cases_per_100000',
+                           color_continuous_scale="geyser",
+                           title = "New cases choropleth for 2022-01-17 week in 3 states",
+                           range_color=(0, 180000),
+                           scope="usa",
+                           labels={'total_cases_per_100000':'total cases per 100000'}
+                          )
+fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0}, title_font_size = 36, title_y = .95)
+fig.show()
+
+#%% choropleth for 2022-01-24 week
+with urlopen('https://gist.githubusercontent.com/mheydt/29eec003a4c0af362d7a/raw/d27d143bd75626647108fc514d8697e0814bf74b/us-states.json') as response2:
+    states = json.load(response2)
+    
+states["features"][0]
+df2 = pd.concat([four_week_period['State'][four_week_period['Date']=='2022-01-24'], four_week_period['total_cases_per_100000'][four_week_period['Date']=='2022-01-24']], axis = 1) 
+fig = px.choropleth(df2, geojson=states, locations='State', locationmode="USA-states", color='total_cases_per_100000',
+                           color_continuous_scale="geyser",
+                           title = "New cases choropleth for 2022-01-24 week in 3 states",
+                           range_color=(0, 180000),
+                           scope="usa",
+                           labels={'total_cases_per_100000':'total cases per 100000'}
+                          )
+fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0}, title_font_size = 36, title_y = .95)
+fig.show()
+
+#%% Stage 6.5
