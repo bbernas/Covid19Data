@@ -914,7 +914,7 @@ fig.show()
 
 #%% 1)
 new_final_confirmed = final_confirmed[final_confirmed['Date']<='2022-02-14']
-final_confirmed_grpby_week = new_final_confirmed.groupby(['State','County Name', pd.Grouper(key='Date', freq='W-MON')])['total_cases'].sum()
+final_confirmed_grpby_week = new_final_confirmed.groupby(['State','County Name','countyFIPS', pd.Grouper(key='Date', freq='W-MON')])['total_cases'].sum()
 final_confirmed_grpby_week=final_confirmed_grpby_week.to_frame()
 final_confirmed_grpby_week.sort_values('Date')
 final_confirmed_grpby_week.reset_index(inplace=True)
@@ -930,26 +930,31 @@ casesperweekUS.show()
 #%% 2)
 final_confirmed_one_week = final_confirmed_grpby_week[final_confirmed_grpby_week['Date']=='2022-01-17']
 Date = final_confirmed_one_week['Date']
-Date=Date.to_frame()
+countyFIPS = final_confirmed_one_week['countyFIPS']
 total_cases_fin = final_confirmed_one_week['total_cases']
-date_and_cases = pd.concat([Date,total_cases_fin],axis=1)
+date_and_cases = pd.concat([Date,total_cases_fin,countyFIPS],axis=1)
 population_counties = pd.read_csv('https://raw.githubusercontent.com/bbernas/Covid19Data/master/population_in_counties.csv')
 
 
 frames=[date_and_cases,date_and_cases]
 common_cols = list(set.intersection(*(set(df.columns) for df in frames)))
-inutile=pd.concat([df[common_cols] for df in frames], ignore_index=True)
+date_and_cases=pd.concat([df[common_cols] for df in frames], ignore_index=True)
 
-frames=[final_confirmed_one_week,population_counties]
-common_cols = list(set.intersection(*(set(df.columns) for df in frames)))
-cases_one_week=pd.concat([df[common_cols] for df in frames], ignore_index=True)
+frames2=[final_confirmed_one_week,population_counties]
+common_cols = list(set.intersection(*(set(df.columns) for df in frames2)))
+cases_one_week=pd.concat([df[common_cols] for df in frames2], ignore_index=True)
 
-cases_one_week['Date']=inutile['Date']
-cases_one_week['total_cases']=inutile['total_cases']
+cases_one_week['countyFIPS']=date_and_cases['countyFIPS']
+cases_one_week['Date']=date_and_cases['Date']
+cases_one_week['total_cases']=date_and_cases['total_cases']
 cases_one_week['population']=population_counties['Population']
 
 #%%
+#final_confirmed_one_week.to_csv('../final_confirmed_one_week.csv')
+
+#%%
 cases_one_week['total_cases_per_100000'] = cases_one_week['total_cases']*100000/cases_one_week['population']
+cases_one_week = cases_one_week.loc[cases_one_week['County Name']!='Statewide Unallocated']
 
 #%%
 AK_one_week = cases_one_week[cases_one_week['State']=='AK']
@@ -1055,6 +1060,148 @@ max_MS = MS_one_week[MS_one_week['total_cases_per_100000']==max_value_MS]
 MT_one_week = cases_one_week[cases_one_week['State']=='MT']
 max_value_MT = MT_one_week['total_cases_per_100000'].max()
 max_MT = MT_one_week[MT_one_week['total_cases_per_100000']==max_value_MT]
+
+
+NC_one_week = cases_one_week[cases_one_week['State']=='NC']
+max_value_NC = NC_one_week['total_cases_per_100000'].max()
+max_NC = NC_one_week[NC_one_week['total_cases_per_100000']==max_value_NC]
+
+ND_one_week = cases_one_week[cases_one_week['State']=='ND']
+max_value_ND = ND_one_week['total_cases_per_100000'].max()
+max_ND = ND_one_week[ND_one_week['total_cases_per_100000']==max_value_ND]
+
+NE_one_week = cases_one_week[cases_one_week['State']=='NE']
+max_value_NE = NE_one_week['total_cases_per_100000'].max()
+max_NE = NE_one_week[NE_one_week['total_cases_per_100000']==max_value_NE]
+
+NH_one_week = cases_one_week[cases_one_week['State']=='NH']
+max_value_NH = NH_one_week['total_cases_per_100000'].max()
+max_NH = NH_one_week[NH_one_week['total_cases_per_100000']==max_value_NH]
+
+NJ_one_week = cases_one_week[cases_one_week['State']=='NJ']
+max_value_NJ = NJ_one_week['total_cases_per_100000'].max()
+max_NJ = NJ_one_week[NJ_one_week['total_cases_per_100000']==max_value_NJ]
+
+NM_one_week = cases_one_week[cases_one_week['State']=='NM']
+max_value_NM = NM_one_week['total_cases_per_100000'].max()
+max_NM = NM_one_week[NM_one_week['total_cases_per_100000']==max_value_NM]
+
+NV_one_week = cases_one_week[cases_one_week['State']=='NV']
+max_value_NV = NV_one_week['total_cases_per_100000'].max()
+max_NV = NV_one_week[NV_one_week['total_cases_per_100000']==max_value_NV]
+
+NY_one_week = cases_one_week[cases_one_week['State']=='NY']
+max_value_NY = NY_one_week['total_cases_per_100000'].max()
+max_NY = NY_one_week[NY_one_week['total_cases_per_100000']==max_value_NY]
+
+OH_one_week = cases_one_week[cases_one_week['State']=='OH']
+max_value_OH = OH_one_week['total_cases_per_100000'].max()
+max_OH = OH_one_week[OH_one_week['total_cases_per_100000']==max_value_OH]
+
+OK_one_week = cases_one_week[cases_one_week['State']=='OK']
+max_value_OK = OK_one_week['total_cases_per_100000'].max()
+max_OK = OK_one_week[OK_one_week['total_cases_per_100000']==max_value_OK]
+
+OR_one_week = cases_one_week[cases_one_week['State']=='OR']
+max_value_OR = OR_one_week['total_cases_per_100000'].max()
+max_OR = OR_one_week[OR_one_week['total_cases_per_100000']==max_value_OR]
+
+PA_one_week = cases_one_week[cases_one_week['State']=='PA']
+max_value_PA = PA_one_week['total_cases_per_100000'].max()
+max_PA = PA_one_week[PA_one_week['total_cases_per_100000']==max_value_PA]
+
+RI_one_week = cases_one_week[cases_one_week['State']=='RI']
+max_value_RI = RI_one_week['total_cases_per_100000'].max()
+max_RI = RI_one_week[RI_one_week['total_cases_per_100000']==max_value_RI]
+
+SC_one_week = cases_one_week[cases_one_week['State']=='SC']
+max_value_SC = SC_one_week['total_cases_per_100000'].max()
+max_SC = SC_one_week[SC_one_week['total_cases_per_100000']==max_value_SC]
+
+SD_one_week = cases_one_week[cases_one_week['State']=='SD']
+max_value_SD = SD_one_week['total_cases_per_100000'].max()
+max_SD = SD_one_week[SD_one_week['total_cases_per_100000']==max_value_SD]
+
+TN_one_week = cases_one_week[cases_one_week['State']=='TN']
+max_value_TN = TN_one_week['total_cases_per_100000'].max()
+max_TN = TN_one_week[TN_one_week['total_cases_per_100000']==max_value_TN]
+
+TX_one_week = cases_one_week[cases_one_week['State']=='TX']
+max_value_TX = TX_one_week['total_cases_per_100000'].max()
+max_TX = TX_one_week[TX_one_week['total_cases_per_100000']==max_value_TX]
+
+UT_one_week = cases_one_week[cases_one_week['State']=='UT']
+max_value_UT = UT_one_week['total_cases_per_100000'].max()
+max_UT = UT_one_week[UT_one_week['total_cases_per_100000']==max_value_UT]
+
+VA_one_week = cases_one_week[cases_one_week['State']=='VA']
+max_value_VA = VA_one_week['total_cases_per_100000'].max()
+max_VA = VA_one_week[VA_one_week['total_cases_per_100000']==max_value_VA]
+
+VT_one_week = cases_one_week[cases_one_week['State']=='VT']
+max_value_VT = VT_one_week['total_cases_per_100000'].max()
+max_VT = VT_one_week[VT_one_week['total_cases_per_100000']==max_value_VT]
+
+WA_one_week = cases_one_week[cases_one_week['State']=='WA']
+max_value_WA = WA_one_week['total_cases_per_100000'].max()
+max_WA = WA_one_week[WA_one_week['total_cases_per_100000']==max_value_WA]
+
+WI_one_week = cases_one_week[cases_one_week['State']=='WI']
+max_value_WI = WI_one_week['total_cases_per_100000'].max()
+max_WI = WI_one_week[WI_one_week['total_cases_per_100000']==max_value_WI]
+
+WV_one_week = cases_one_week[cases_one_week['State']=='WV']
+max_value_WV = WV_one_week['total_cases_per_100000'].max()
+max_WV = WV_one_week[WV_one_week['total_cases_per_100000']==max_value_WV]
+
+WY_one_week = cases_one_week[cases_one_week['State']=='WY']
+max_value_WY = WY_one_week['total_cases_per_100000'].max()
+max_WY = WY_one_week[WY_one_week['total_cases_per_100000']==max_value_WY]
+
+max_all_states = pd.concat([max_AK,max_AL,max_AR,max_AZ,max_CA,max_CO,max_CT,max_DE,max_FL,max_GA,max_HI,max_IA,max_ID,max_IL,max_IN,max_KS,max_KY,max_LA,max_MA,max_MD,max_ME,max_MI,max_MN,max_MO,max_MS,max_MT,max_NC,max_ND,max_NE,max_NH,max_NJ,max_NM,max_NV,max_NY,max_OH,max_OK,max_OR,max_PA,max_RI,max_SC,max_SD,max_TN,max_TX,max_UT,max_VA,max_VT,max_WA,max_WI,max_WV,max_WY])
+
+#%% 3)
+with urlopen('https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json') as response:
+    counties = json.load(response)
+    
+counties["features"][0]
+fixedstr = max_all_states['countyFIPS'].astype(str)
+max_all_states_copy = fixedstr.str.zfill(5)             
+df1 = pd.concat([max_all_states_copy, max_all_states['total_cases_per_100000']], axis = 1)
+df1 = pd.concat([df1, max_all_states['State']], axis = 1)
+fig = px.choropleth(df1, geojson=counties, locations='countyFIPS', color='total_cases_per_100000',
+                           color_continuous_scale="geyser",
+                           title = "Covid 19 Cases for the 50 counties with the highest numbers of cases on week 2022-01-17",
+                           range_color=(80000, 1000000),
+                           scope="usa",
+                           labels={'2022-01-17':'total cases per 100,000'}
+                          )
+fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0}, title_font_size = 20, title_y = .9)
+fig.show()
+
+#%%
+with urlopen('https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json') as response:
+    counties = json.load(response)
+    
+counties["features"][0]
+fixedstr = max_all_states['countyFIPS'].astype(str)
+max_all_states_copy = fixedstr.str.zfill(5)             
+df1 = pd.concat([max_all_states_copy, max_all_states['total_cases_per_100000']], axis = 1)
+df1 = pd.concat([df1, max_all_states['State']], axis = 1)
+fig = px.choropleth(df1, geojson=counties, locations='countyFIPS', color='total_cases_per_100000',
+                           color_continuous_scale=[(0, "green"),   (100000, "green"),
+                                                     (100000, "yellow"), (1000000, "yellow"),
+                                                     (1000000, "orange"),  (3000000, "orange")
+                                                     (3000000, "red"), (15000000, "red")],
+                           title = "Covid 19 Cases for the 50 counties with the highest numbers of cases on week 2022-01-17",
+                           scope="usa",
+                           labels={'2022-01-17':'total cases per 100,000'}
+                          )
+fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0}, title_font_size = 20, title_y = .9)
+fig.show()
+
+#### STAGE 7
+
 #%% stage 7
 from urllib.request import urlopen
 import json
