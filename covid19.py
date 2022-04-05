@@ -911,3 +911,147 @@ fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0}, title_font_size = 36, title_
 fig.show()
 
 #%% Stage 6.5
+
+#%% 1)
+new_final_confirmed = final_confirmed[final_confirmed['Date']<='2022-02-14']
+final_confirmed_grpby_week = new_final_confirmed.groupby(['State','County Name', pd.Grouper(key='Date', freq='W-MON')])['total_cases'].sum()
+final_confirmed_grpby_week=final_confirmed_grpby_week.to_frame()
+final_confirmed_grpby_week.sort_values('Date')
+final_confirmed_grpby_week.reset_index(inplace=True)
+USCase = pd.concat([final_confirmed_grpby_week['Date'],final_confirmed_grpby_week['total_cases']], axis =1)
+#dates for one county
+final_confirmed_grpby_week_one_county = final_confirmed_grpby_week.loc[(final_confirmed_grpby_week['County Name']==chosen_county) & (final_confirmed_grpby_week['State']==chosen_state)]
+dates=final_confirmed_grpby_week_one_county['Date']
+USCase = USCase.groupby('Date').sum()
+USCase = USCase['total_cases'].diff()
+casesperweekUS = px.bar(USCase, x = dates, y='total_cases', title=("New Cases per week in the US"), labels=dict(x = "Date", total_cases = 'New Cases per week'))
+casesperweekUS.show()
+
+#%% 2)
+final_confirmed_one_week = final_confirmed_grpby_week[final_confirmed_grpby_week['Date']=='2022-01-17']
+Date = final_confirmed_one_week['Date']
+Date=Date.to_frame()
+total_cases_fin = final_confirmed_one_week['total_cases']
+date_and_cases = pd.concat([Date,total_cases_fin],axis=1)
+population_counties = pd.read_csv('https://raw.githubusercontent.com/bbernas/Covid19Data/master/population_in_counties.csv')
+
+
+frames=[date_and_cases,date_and_cases]
+common_cols = list(set.intersection(*(set(df.columns) for df in frames)))
+inutile=pd.concat([df[common_cols] for df in frames], ignore_index=True)
+
+frames=[final_confirmed_one_week,population_counties]
+common_cols = list(set.intersection(*(set(df.columns) for df in frames)))
+cases_one_week=pd.concat([df[common_cols] for df in frames], ignore_index=True)
+
+cases_one_week['Date']=inutile['Date']
+cases_one_week['total_cases']=inutile['total_cases']
+cases_one_week['population']=population_counties['Population']
+
+#%%
+cases_one_week['total_cases_per_100000'] = cases_one_week['total_cases']*100000/cases_one_week['population']
+
+#%%
+AK_one_week = cases_one_week[cases_one_week['State']=='AK']
+max_value_AK = AK_one_week['total_cases_per_100000'].max()
+max_AK = AK_one_week[AK_one_week['total_cases_per_100000']==max_value_AK]
+
+AL_one_week = cases_one_week[cases_one_week['State']=='AL']
+max_value_AL = AL_one_week['total_cases_per_100000'].max()
+max_AL = AL_one_week[AL_one_week['total_cases_per_100000']==max_value_AL]
+
+AR_one_week = cases_one_week[cases_one_week['State']=='AR']
+max_value_AR = AR_one_week['total_cases_per_100000'].max()
+max_AR = AR_one_week[AR_one_week['total_cases_per_100000']==max_value_AR]
+
+AZ_one_week = cases_one_week[cases_one_week['State']=='AZ']
+max_value_AZ = AZ_one_week['total_cases_per_100000'].max()
+max_AZ = AZ_one_week[AZ_one_week['total_cases_per_100000']==max_value_AZ]
+
+CA_one_week = cases_one_week[cases_one_week['State']=='CA']
+max_value_CA = CA_one_week['total_cases_per_100000'].max()
+max_CA = CA_one_week[CA_one_week['total_cases_per_100000']==max_value_CA]
+
+CO_one_week = cases_one_week[cases_one_week['State']=='CO']
+max_value_CO = CO_one_week['total_cases_per_100000'].max()
+max_CO = CO_one_week[CO_one_week['total_cases_per_100000']==max_value_CO]
+
+CT_one_week = cases_one_week[cases_one_week['State']=='CT']
+max_value_CT = CT_one_week['total_cases_per_100000'].max()
+max_CT = CT_one_week[CT_one_week['total_cases_per_100000']==max_value_CT]
+
+DE_one_week = cases_one_week[cases_one_week['State']=='DE']
+max_value_DE = DE_one_week['total_cases_per_100000'].max()
+max_DE = DE_one_week[DE_one_week['total_cases_per_100000']==max_value_DE]
+
+FL_one_week = cases_one_week[cases_one_week['State']=='FL']
+max_value_FL = FL_one_week['total_cases_per_100000'].max()
+max_FL = FL_one_week[FL_one_week['total_cases_per_100000']==max_value_FL]
+
+GA_one_week = cases_one_week[cases_one_week['State']=='GA']
+max_value_GA = GA_one_week['total_cases_per_100000'].max()
+max_GA = GA_one_week[GA_one_week['total_cases_per_100000']==max_value_GA]
+
+HI_one_week = cases_one_week[cases_one_week['State']=='HI']
+max_value_HI = HI_one_week['total_cases_per_100000'].max()
+max_HI = HI_one_week[HI_one_week['total_cases_per_100000']==max_value_HI]
+
+IA_one_week = cases_one_week[cases_one_week['State']=='IA']
+max_value_IA = IA_one_week['total_cases_per_100000'].max()
+max_IA = IA_one_week[IA_one_week['total_cases_per_100000']==max_value_IA]
+
+ID_one_week = cases_one_week[cases_one_week['State']=='ID']
+max_value_ID = ID_one_week['total_cases_per_100000'].max()
+max_ID = ID_one_week[ID_one_week['total_cases_per_100000']==max_value_ID]
+
+IL_one_week = cases_one_week[cases_one_week['State']=='IL']
+max_value_IL = IL_one_week['total_cases_per_100000'].max()
+max_IL = IL_one_week[IL_one_week['total_cases_per_100000']==max_value_IL]
+
+IN_one_week = cases_one_week[cases_one_week['State']=='IN']
+max_value_IN = IN_one_week['total_cases_per_100000'].max()
+max_IN = IN_one_week[IN_one_week['total_cases_per_100000']==max_value_IN]
+
+KS_one_week = cases_one_week[cases_one_week['State']=='KS']
+max_value_KS = KS_one_week['total_cases_per_100000'].max()
+max_KS = KS_one_week[KS_one_week['total_cases_per_100000']==max_value_KS]
+
+KY_one_week = cases_one_week[cases_one_week['State']=='KY']
+max_value_KY = KY_one_week['total_cases_per_100000'].max()
+max_KY = KY_one_week[KY_one_week['total_cases_per_100000']==max_value_KY]
+
+LA_one_week = cases_one_week[cases_one_week['State']=='LA']
+max_value_LA = LA_one_week['total_cases_per_100000'].max()
+max_LA = LA_one_week[LA_one_week['total_cases_per_100000']==max_value_LA]
+
+MA_one_week = cases_one_week[cases_one_week['State']=='MA']
+max_value_MA = MA_one_week['total_cases_per_100000'].max()
+max_MA = MA_one_week[MA_one_week['total_cases_per_100000']==max_value_MA]
+
+MD_one_week = cases_one_week[cases_one_week['State']=='MD']
+max_value_MD = MD_one_week['total_cases_per_100000'].max()
+max_MD = MD_one_week[MD_one_week['total_cases_per_100000']==max_value_MD]
+
+ME_one_week = cases_one_week[cases_one_week['State']=='ME']
+max_value_ME = ME_one_week['total_cases_per_100000'].max()
+max_ME = ME_one_week[ME_one_week['total_cases_per_100000']==max_value_ME]
+
+MI_one_week = cases_one_week[cases_one_week['State']=='MI']
+max_value_MI = MI_one_week['total_cases_per_100000'].max()
+max_MI = MI_one_week[MI_one_week['total_cases_per_100000']==max_value_MI]
+
+MN_one_week = cases_one_week[cases_one_week['State']=='MN']
+max_value_MN = MN_one_week['total_cases_per_100000'].max()
+max_MN = MN_one_week[MN_one_week['total_cases_per_100000']==max_value_MN]
+
+MO_one_week = cases_one_week[cases_one_week['State']=='MO']
+max_value_MO = MO_one_week['total_cases_per_100000'].max()
+max_MO = MO_one_week[MO_one_week['total_cases_per_100000']==max_value_MO]
+
+MS_one_week = cases_one_week[cases_one_week['State']=='MS']
+max_value_MS = MS_one_week['total_cases_per_100000'].max()
+max_MS = MS_one_week[MS_one_week['total_cases_per_100000']==max_value_MS]
+
+MT_one_week = cases_one_week[cases_one_week['State']=='MT']
+max_value_MT = MT_one_week['total_cases_per_100000'].max()
+max_MT = MT_one_week[MT_one_week['total_cases_per_100000']==max_value_MT]
