@@ -1061,6 +1061,7 @@ MT_one_week = cases_one_week[cases_one_week['State']=='MT']
 max_value_MT = MT_one_week['total_cases_per_100000'].max()
 max_MT = MT_one_week[MT_one_week['total_cases_per_100000']==max_value_MT]
 
+
 NC_one_week = cases_one_week[cases_one_week['State']=='NC']
 max_value_NC = NC_one_week['total_cases_per_100000'].max()
 max_NC = NC_one_week[NC_one_week['total_cases_per_100000']==max_value_NC]
@@ -1201,4 +1202,30 @@ fig.show()
 
 #### STAGE 7
 
-#%%
+#%% stage 7
+from urllib.request import urlopen
+import json
+with urlopen('https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json') as response:
+    counties = json.load(response)
+   
+counties["features"][0]
+fixedstr = confirmed['countyFIPS'].astype(str)
+confirmedcopy = fixedstr.str.zfill(5)
+df3 = pd.concat([confirmedcopy, confirmed['2020-01-22'],confirmed['2020-02-22'], confirmed['2020-03-22'], confirmed['2020-04-22'], confirmed['2020-05-22'], 
+                confirmed['2020-06-22'], confirmed['2020-07-22'], confirmed['2020-08-22'], confirmed['2020-09-22'], confirmed['2020-10-22'], confirmed['2020-11-22'],
+                confirmed['2020-12-22'],confirmed['2021-01-22'],confirmed['2021-02-22'], confirmed['2021-03-22'], confirmed['2021-04-22'], confirmed['2021-05-22'], 
+                confirmed['2021-06-22'], confirmed['2021-07-22'], confirmed['2021-08-22'], confirmed['2021-09-22'], confirmed['2021-10-22'], confirmed['2021-11-22'],
+                confirmed['2021-12-22'], confirmed['2022-01-22'],confirmed['2022-02-15']],
+                axis = 1)
+df3 = pd.concat([df3, confirmed['State']], axis = 1)
+df3 = pd.melt(df3, id_vars=['State','countyFIPS'], var_name= 'Date', value_name= 'Cases')
+fig = px.choropleth(df3, geojson=counties, locations='countyFIPS',
+                           color_continuous_scale="picnic", color = 'Cases',
+                           title = "Covid 19 Cases per County over the Pandemic",
+                           range_color =(0, 50000),
+                           animation_frame = 'Date',
+                           scope="usa",
+                           labels={'2022-02-15':'total cases'}
+                          )
+fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0}, title_font_size = 42, title_y = .95)
+fig.show()
