@@ -1180,6 +1180,28 @@ fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0}, title_font_size = 20, title_
 fig.show()
 
 
+#%%
+with urlopen('https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json') as response:
+    counties = json.load(response)
+    
+counties["features"][0]
+fixedstr = max_all_states['countyFIPS'].astype(str)
+max_all_states_copy = fixedstr.str.zfill(5)             
+df1 = pd.concat([max_all_states_copy, max_all_states['total_cases_per_100000']], axis = 1)
+df1 = pd.concat([df1, max_all_states['State']], axis = 1)
+fig = px.choropleth(df1, geojson=counties, locations='countyFIPS', color='total_cases_per_100000',
+                           color_continuous_scale=[(0, "green"),   (100000, "green"),
+                                                     (100000, "yellow"), (1000000, "yellow"),
+                                                     (1000000, "orange"),  (3000000, "orange")
+                                                     (3000000, "red"), (15000000, "red")],
+                           title = "Covid 19 Cases for the 50 counties with the highest numbers of cases on week 2022-01-17",
+                           scope="usa",
+                           labels={'2022-01-17':'total cases per 100,000'}
+                          )
+fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0}, title_font_size = 20, title_y = .9)
+fig.show()
+
+
 #%% stage 7-1
 
 from urllib.request import urlopen
@@ -1208,7 +1230,9 @@ fig = px.choropleth(df3, geojson=counties, locations='countyFIPS',
                           )
 fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0}, title_font_size = 42, title_y = .95)
 fig.show()
+
 fig.write_html("/Users/bradenbernas/Downloads/Counties.html")
+
 
 #%% stage 7.2
 df4 = confirmed_copy.groupby("StateFIPS" and 'State').sum()
@@ -1231,7 +1255,9 @@ fig = px.choropleth(df6, geojson=counties, locations='State', locationmode="USA-
                            )
 fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0}, title_font_size = 42, title_y = .95)
 fig.show()
+
 fig.write_html("/Users/bradenbernas/Downloads/States.html")
+
 
 #%% Counties similar to Bibb county, population wise
 # Tippah County, MS- Pop: 22015 - FIPS: 28139
@@ -1246,6 +1272,14 @@ sixcounties1 = pd.melt(sixcounties, id_vars='County Name', var_name= 'Date', val
 fig = px.area(sixcounties1, x = 'Date', y='Cases', title=("Total Cases In Six Counties"), 
              labels=dict(x = "Date", y = 'Total Cases'), color = 'County Name')
 fig.show()
+
+sixcountiesdead = final_deaths.loc[(final_deaths['countyFIPS'] == 1007) | (final_deaths['countyFIPS'] == 28139)| (final_deaths['countyFIPS'] == 47151)
+                             | (final_deaths['countyFIPS'] == 8075) | (final_deaths['countyFIPS'] == 18047) | (final_deaths['countyFIPS'] == 17083)]
+sixcountiesdead1 = pd.melt(sixcountiesdead, id_vars='County Name', var_name= 'Date', value_name= 'Deaths')
+fig = px.area(sixcountiesdead, x = 'Date', y='total_deaths', title=("Total Deaths In Six Counties"), 
+             labels=dict(x = "Date", y = 'Total Deaths'), color = 'County Name')
+fig.show()
+
 
 sixcountiesdead = final_deaths.loc[(final_deaths['countyFIPS'] == 1007) | (final_deaths['countyFIPS'] == 28139)| (final_deaths['countyFIPS'] == 47151)
                              | (final_deaths['countyFIPS'] == 8075) | (final_deaths['countyFIPS'] == 18047) | (final_deaths['countyFIPS'] == 17083)]
