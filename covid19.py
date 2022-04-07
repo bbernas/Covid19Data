@@ -1200,9 +1200,8 @@ fig = px.choropleth(df1, geojson=counties, locations='countyFIPS', color='total_
 fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0}, title_font_size = 20, title_y = .9)
 fig.show()
 
-#### STAGE 7
+#%% stage 7-1
 
-#%% stage 7
 from urllib.request import urlopen
 import json
 with urlopen('https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json') as response:
@@ -1229,3 +1228,48 @@ fig = px.choropleth(df3, geojson=counties, locations='countyFIPS',
                           )
 fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0}, title_font_size = 42, title_y = .95)
 fig.show()
+
+#%% stage 7.2
+df4 = confirmed_copy.groupby("StateFIPS" and 'State').sum()
+df4.reset_index(inplace=True)
+df6 = pd.DataFrame(df4['State'])
+df6 = pd.concat([df6,df4['2020-01-22'],df4['2020-02-22'], df4['2020-03-22'], df4['2020-04-22'], df4['2020-05-22'], 
+                df4['2020-06-22'], df4['2020-07-22'], df4['2020-08-22'], df4['2020-09-22'], df4['2020-10-22'], df4['2020-11-22'],
+                df4['2020-12-22'],df4['2021-01-22'],df4['2021-02-22'], df4['2021-03-22'], df4['2021-04-22'], df4['2021-05-22'], 
+                df4['2021-06-22'], df4['2021-07-22'], df4['2021-08-22'], df4['2021-09-22'], df4['2021-10-22'], df4['2021-11-22'],
+                df4['2021-12-22'], df4['2022-01-22'],df4['2022-02-15']],
+                axis = 1)
+df6 = pd.melt(df6, id_vars=['State'], var_name= 'Date', value_name= 'Cases')
+fig = px.choropleth(df6, geojson=counties, locations='State', locationmode="USA-states",
+                            color_continuous_scale="picnic", color = 'Cases',
+                            title = "Covid 19 Cases per County over the Pandemic",
+                            range_color =(0, 1000000),
+                            animation_frame = 'Date',
+                            scope="usa",
+                            labels={'2022-02-15':'total cases'}
+                           )
+fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0}, title_font_size = 42, title_y = .95)
+fig.show()
+
+#%% Counties similar to Bibb county, population wise
+# Tippah County, MS- Pop: 22015 - FIPS: 28139
+# Scott County, TN - Pop: 22068 - FIPS: 47151
+# Logan County, CO - Pop: 22409 - FIPS: 08075
+# Franklin County, IN - Pop: 22758 - FIPS: 18047
+# Jersey County, IL, Pop: 21773 - FIPS: 17083
+
+sixcounties = confirmed.loc[(confirmed['countyFIPS'] == 1007) | (confirmed['countyFIPS'] == 28139)| (confirmed['countyFIPS'] == 47151)
+                             | (confirmed['countyFIPS'] == 8075) | (confirmed['countyFIPS'] == 18047) | (confirmed['countyFIPS'] == 17083)]
+sixcounties1 = pd.melt(sixcounties, id_vars='County Name', var_name= 'Date', value_name= 'Cases')
+fig = px.area(sixcounties1, x = 'Date', y='Cases', title=("Total Cases In Six Counties"), 
+             labels=dict(x = "Date", y = 'Total Cases'), color = 'County Name')
+fig.show()
+
+sixcountiesdead = final_deaths.loc[(final_deaths['countyFIPS'] == 1007) | (final_deaths['countyFIPS'] == 28139)| (final_deaths['countyFIPS'] == 47151)
+                             | (final_deaths['countyFIPS'] == 8075) | (final_deaths['countyFIPS'] == 18047) | (final_deaths['countyFIPS'] == 17083)]
+sixcountiesdead1 = pd.melt(sixcountiesdead, id_vars='County Name', var_name= 'Date', value_name= 'Deaths')
+fig = px.area(sixcountiesdead, x = 'Date', y='total_deaths', title=("Total Deaths In Six Counties"), 
+             labels=dict(x = "Date", y = 'Total Deaths'), color = 'County Name')
+fig.show()
+
+
